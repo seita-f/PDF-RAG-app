@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: pdf-rag-app:dev
+    container_name: pdf_rag_app
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      STREAMLIT_SERVER_RUN_ON_SAVE: "true"
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+      VECTORDB_DIR: /app/storage/vectordb
+      UPLOAD_DIR: /app/data/uploads
+    volumes:
+      - .:/app
+      - ./storage:/app/storage
+      - ./data:/app/data
