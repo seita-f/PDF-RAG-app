@@ -20,4 +20,4 @@ COPY . .
 # Streamlit
 EXPOSE 8501
 
-CMD ["uv", "run", "streamlit", "run", "src/pdf_rag/ui/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+CMD ["uv", "run", "python", "-m", "streamlit", "run", "src/pdf_rag/ui/app.py", "--server.address=0.0.0.0", "--server.port=8501"]

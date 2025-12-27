@@ -5,9 +5,6 @@
 ```
 docker compose build
 docker compose up -d
-docker compose exec app bash
-cd src/pdf_rag/ui
-uv run streamlit run app.py
 ```
 
 # Evaluation
