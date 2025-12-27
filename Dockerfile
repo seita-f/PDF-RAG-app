@@ -2,7 +2,8 @@
 FROM ghcr.io/astral-sh/uv:0.9.2-python3.12-bookworm-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app 
 
 WORKDIR /app
 
