@@ -3,8 +3,9 @@ name = "pdf-rag-app"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
-  "streamlit",
+  "streamlit[pdf]",
   "langchain",
+  "streamlit-pdf-viewer>=0.0.26",
 ]
 
 [tool.uv]
