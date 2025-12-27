@@ -1,10 +1,26 @@
+import os
+
 import streamlit as st
+from pdfminer.high_level import extract_text
+from pdfminer.layout import LAParams
 from streamlit_pdf_viewer import pdf_viewer
 
-# New streamlit funciton:
-# pdf_file = st.file_uploader("Upload PDF", type="pdf")
-# if pdf_file:
-#     st.pdf(pdf_file)
+# from src.pdf_rag.rag.ingest import extract_text_from_pdf
+
+
+def extract_text_from_pdf(pdf_file):
+    try:
+        laparams = LAParams(
+            all_texts=True
+        )  # all_texts: include text in graph, table etc
+
+        text = extract_text(pdf_file, laparams=laparams)
+        return text
+
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return None
+
 
 st.set_page_config(layout="wide")
 st.title("📄 PDF RAG Assistant")
@@ -14,7 +30,27 @@ with st.sidebar:
     st.header("Upload Documents")
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     if uploaded_file:
-        st.success(f"Registered {uploaded_file.name}")
+        extracted_text = extract_text_from_pdf(uploaded_file)
+
+        if extracted_text:
+            st.success(f"Registered {uploaded_file.name}")
+
+            # 保存ディレクトリの指定（例: data フォルダ）
+            save_path = "data/uploads"
+            os.makedirs(save_path, exist_ok=True)
+
+            txt_filename = os.path.join(
+                save_path, uploaded_file.name.replace(".pdf", ".txt")
+            )
+
+            with open(txt_filename, "w", encoding="utf-8") as file:
+                file.write(extracted_text)
+
+            st.info(f"Text saved to {txt_filename}")
+
+        else:
+            st.error("Failed to extract text from PDF.")
+
 
 col_chat, col_pdf = st.columns([1.5, 1])
 

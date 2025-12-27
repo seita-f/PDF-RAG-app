@@ -6,6 +6,7 @@ dependencies = [
   "streamlit[pdf]",
   "langchain",
   "streamlit-pdf-viewer>=0.0.26",
+  "pdfminer-six>=20251107",
 ]
 
 [tool.uv]
