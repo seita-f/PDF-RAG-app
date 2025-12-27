@@ -30,3 +30,5 @@ def debug_save_pdf_in_text(uploaded_file, extracted_text):
 
     with open(txt_filename, "w", encoding="utf-8") as file:
         file.write(extracted_text)
+
+    return txt_filename
