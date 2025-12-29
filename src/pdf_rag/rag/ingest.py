@@ -3,11 +3,6 @@ import os
 from pdfminer.high_level import extract_text
 from pdfminer.layout import LAParams
 
-
-def save_pdf(uploaded_file):
-    pass
-
-
 def extract_text_from_pdf(pdf_file):
     try:
         laparams = LAParams(
@@ -15,6 +10,12 @@ def extract_text_from_pdf(pdf_file):
         )  # all_texts: include text in graph, table etc
 
         text = extract_text(pdf_file, laparams=laparams)
+
+        # Normalize text data
+
+        # [to-do] I would like to add the funciton to deal with images in pdf 
+        
+        # text = '\n'.join(text)
         return text
 
     except Exception as e:
@@ -31,4 +32,15 @@ def debug_save_pdf_in_text(uploaded_file, extracted_text):
     with open(txt_filename, "w", encoding="utf-8") as file:
         file.write(extracted_text)
 
-    return txt_filename
+
+def save_pdf(uploaded_file):
+    save_path = "data/uploads"
+    os.makedirs(save_path, exist_ok=True)
+    
+    file_path = os.path.join(save_path, uploaded_file.name)
+    
+    # write in binary mode
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+        
+    return file_path
