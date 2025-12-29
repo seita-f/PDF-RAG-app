@@ -1,7 +1,12 @@
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
 
-from src.pdf_rag.rag.ingest import debug_save_pdf_in_text, extract_text_from_pdf
+from src.pdf_rag.rag.ingest import (
+    debug_save_pdf_in_text,
+    extract_text_from_pdf,
+    save_pdf,
+)
+from src.pdf_rag.rag.vectorize import vectorize_text
 
 st.set_page_config(layout="wide")
 st.title("📄 PDF RAG Assistant")
@@ -11,15 +16,20 @@ with st.sidebar:
     st.header("Upload Documents")
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     if uploaded_file:
+        save_pdf(uploaded_file)
         extracted_text = extract_text_from_pdf(uploaded_file)
 
         if extracted_text:
-            st.success(f"Registered {uploaded_file.name}")
-            txt_filename = debug_save_pdf_in_text(uploaded_file, extracted_text)
-            st.info(f"Text saved to {txt_filename}")
+            st.success(f"Extracted text from {uploaded_file.name}")
+
+            # DEBUG:
+            debug_save_pdf_in_text(uploaded_file, extracted_text)
+
+            db = vectorize_text(extracted_text, uploaded_file.name)
+            st.info(f"Stored {uploaded_file.name} in vectordb")
 
         else:
-            st.error("Failed to extract text from PDF.")
+            st.error("Failed to extract/vectorized text from PDF.")
 
 
 col_chat, col_pdf = st.columns([1.5, 1])
