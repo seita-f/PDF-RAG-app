@@ -1,12 +1,12 @@
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
 
+from src.pdf_rag.rag.embedding import embedding_text
 from src.pdf_rag.rag.ingest import (
     debug_save_pdf_in_text,
     extract_text_from_pdf,
     save_pdf,
 )
-from src.pdf_rag.rag.vectorize import vectorize_text
 
 st.set_page_config(layout="wide")
 st.title("📄 PDF RAG Assistant")
@@ -25,7 +25,7 @@ with st.sidebar:
             # DEBUG:
             debug_save_pdf_in_text(uploaded_file, extracted_text)
 
-            db = vectorize_text(extracted_text, uploaded_file.name)
+            db = embedding_text(extracted_text, uploaded_file.name)
             st.info(f"Stored {uploaded_file.name} in vectordb")
 
         else:
