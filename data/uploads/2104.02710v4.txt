@@ -2659,13 +2659,13 @@ MABe 2021 Task 1 Top-1
 .913 ± .019
 Table 8: Per-class results on Task 1 (mean ± standard deviation over 5 runs.)
 
-.724 ± .023
-.839 ± .011
-.885 ± .012
-
 .664 ± .031
 .789 ± .002
 .827 ± .024
+
+.724 ± .023
+.839 ± .011
+.885 ± .012
 
 .814 ± .005
 .817 ± .003
@@ -2815,6 +2815,8 @@ MABe 2021 Task 2 Top-1
 .866 ± .003
 .893 ± .031
 
+Annotator 3
+
 Baseline
 Baseline w/ task prog
 MABe 2021 Task 2 Top-1
@@ -2844,8 +2846,6 @@ MABe 2021 Task 2 Top-1
 .978 ± .017
 
 Annotator 4
-
-Annotator 3
 
 Baseline
 Baseline w/ task prog

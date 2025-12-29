@@ -1,9 +1,8 @@
 import streamlit as st
-from streamlit_pdf_viewer import pdf_viewer
 
-from src.pdf_rag.rag.embedding import embedding_text
+from src.pdf_rag.rag.embedding import embedding_data, search_similar_documents
+from src.pdf_rag.rag.generate import generate_answer
 from src.pdf_rag.rag.ingest import (
-    debug_save_pdf_in_text,
     extract_text_from_pdf,
     save_pdf,
 )
@@ -23,75 +22,64 @@ with st.sidebar:
             st.success(f"Extracted text from {uploaded_file.name}")
 
             # DEBUG:
-            debug_save_pdf_in_text(uploaded_file, extracted_text)
+            # debug_save_pdf_in_text(uploaded_file, extracted_text)
 
-            db = embedding_text(extracted_text, uploaded_file.name)
+            db = embedding_data(extracted_text, uploaded_file.name)
             st.info(f"Stored {uploaded_file.name} in vectordb")
 
         else:
             st.error("Failed to extract/vectorized text from PDF.")
 
+st.subheader("Ask a question")
+with st.form(key="search_form", clear_on_submit=False):
+    user_input = st.text_input(
+        "Type your question here...", placeholder="Ex: What is the revenue target?"
+    )
+    submit_button = st.form_submit_button(label="Search")
 
-col_chat, col_pdf = st.columns([1.5, 1])
+if submit_button and user_input:
+    # display user input
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-with col_chat:
-    st.subheader("Chat")
-    # chat
-    if prompt := st.chat_input("Ex: What is the revenue target for 2024?"):
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    # rag
+    with st.spinner("Searching and Generating..."):
+        search_results = search_similar_documents(user_input)
+        ans = generate_answer(user_input, search_results)
 
-        # RAG
-        ans = "Answer: It is ... (Mock now)"
-        sources = [
-            {"name": "manual.pdf", "score": 0.92, "text": "MOCK ANS", "page": 5},
-            {"name": "info.pdf", "score": 0.85, "text": "MOCK ANS", "page": 12},
-        ]
+    # display answer
+    with st.chat_message("assistant"):
+        st.write(ans)
 
-        with st.chat_message("assistant"):
-            st.write(ans)
+        # display reference
+        st.write("---")
+        st.write(f"### References ({len(search_results)} results found)")
 
-            # Reference Table Section
-            num_results = len(sources)
-            st.write(f"### References ({num_results} results found)")
-            st.markdown(
-                """
-                <div style="background-color: #f0f2f6; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    <div style="display: flex;">
-                        <div style="flex: 0.5; font-weight: bold;">Rank</div>
-                        <div style="flex: 2; font-weight: bold;">Source Name / Snippet</div>
-                        <div style="flex: 0.5; font-weight: bold;">Action</div>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+        for i, (doc, score) in enumerate(search_results):
+            c1, c2, c3 = st.columns([0.4, 3, 0.6])
 
-            # data rows
-            for i, s in enumerate(sources):
-                c1, c2, c3 = st.columns([0.5, 2, 0.5])
+            with c1:
+                st.write(f"#{i + 1}")
 
-                with c1:
-                    st.write(f"#{i + 1}")
-                with c2:
-                    st.markdown(f"**{s['name']}**")
-                    st.caption(f"{s['text'][:50]}...")
-                # with c3:
-                #     # Score
-                #     st.write(f"{int(s['score'] * 100)}%")
-                with c3:
-                    if st.button(
-                        "Display PDF", key=f"btn_{i}", use_container_width=True
-                    ):
-                        st.session_state.selected_pdf = s
+            with c2:
+                st.markdown(
+                    f"**{doc.metadata.get('source', 'Unknown')}** (p.{doc.metadata.get('page', 1)})"
+                )
+                st.caption(doc.page_content)
 
-                st.divider()
+            with c3:
+                confidence = max(0, min(100, int(score * 100)))
+                color = (
+                    "#28a745"
+                    if confidence >= 70
+                    else "#ffc107"
+                    if confidence >= 40
+                    else "#dc3545"
+                )
+                st.markdown(
+                    f"<span style='color: {color}; font-weight: bold;'>{confidence}%</span>",
+                    unsafe_allow_html=True,
+                )
+                st.progress(confidence / 100)
 
-with col_pdf:
-    st.subheader("PDF Preview")
-    if "selected_pdf" in st.session_state:
-        s = st.session_state.selected_pdf
-        st.info(f"Document Viewer: {s['name']} (p.{s['page']})")
-        pdf_viewer(f"data/uploads/{s['name']}", width=400)
-    else:
-        st.write("Select 'View PDF' from the references to preview the document here.")
+            st.divider()
