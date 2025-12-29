@@ -19,5 +19,4 @@ services:
     volumes:
       - .:/app
       - /app/.venv
-      - ./storage:/app/storage
       - ./data:/app/data
