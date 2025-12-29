@@ -3,7 +3,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
-def vectorize_text(extracted_text, filename):
+def embedding_text(extracted_text, filename):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=200,

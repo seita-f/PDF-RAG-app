@@ -709,15 +709,15 @@ investigation, mount) for different baseline model
 architectures. The value is shown of the mean and
 standard deviation over 5 runs.
 
-.659 ± .005
-.675 ± .011
-.610 ± .028
-.793 ± .011
-
 .726 ± .004
 .712 ± .013
 .644 ± .018
 .856 ± .010
+
+.659 ± .005
+.675 ± .011
+.610 ± .028
+.793 ± .011
 
 Task1 Top-1 Entry. We also include the top-1 entry in Task 1 of our dataset at MABe 2021 as
 part of our benchmark (Table 2). This model starts from an egocentric representation of the data;
@@ -2659,6 +2659,10 @@ MABe 2021 Task 1 Top-1
 .913 ± .019
 Table 8: Per-class results on Task 1 (mean ± standard deviation over 5 runs.)
 
+.724 ± .023
+.839 ± .011
+.885 ± .012
+
 .664 ± .031
 .789 ± .002
 .827 ± .024
@@ -2666,10 +2670,6 @@ Table 8: Per-class results on Task 1 (mean ± standard deviation over 5 runs.)
 .814 ± .005
 .817 ± .003
 .852 ± .011
-
-.724 ± .023
-.839 ± .011
-.885 ± .012
 
 .893 ± .005
 .889 ± .006
@@ -2815,8 +2815,6 @@ MABe 2021 Task 2 Top-1
 .866 ± .003
 .893 ± .031
 
-Annotator 3
-
 Baseline
 Baseline w/ task prog
 MABe 2021 Task 2 Top-1
@@ -2846,6 +2844,8 @@ MABe 2021 Task 2 Top-1
 .978 ± .017
 
 Annotator 4
+
+Annotator 3
 
 Baseline
 Baseline w/ task prog

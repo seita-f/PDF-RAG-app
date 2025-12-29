@@ -2,4 +2,4 @@
 .DS_Store
 .venv
 
-# data/vectordb/
+# data/chroma_db/
