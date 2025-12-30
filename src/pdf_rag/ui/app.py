@@ -1,11 +1,34 @@
 import streamlit as st
+import yaml
 
 from src.pdf_rag.rag.embedding import embedding_data, search_similar_documents
 from src.pdf_rag.rag.generate import generate_answer
 from src.pdf_rag.rag.ingest import (
+    debug_save_pdf_in_text,
     extract_text_from_pdf,
     save_pdf,
 )
+
+# load config
+with open("config/config.yaml") as file:
+    config = yaml.safe_load(file.read())
+
+# PDF
+PDF_DOC_DIR = config["pdf"]["doc_dir"]
+PDF_TEXTS_DIR = config["pdf"]["text_dir"]
+
+# EMBEDDING
+EMBEDDING_MODEL = config["embedding"]["model"]
+EMBEDDING_OVERLAP = config["embedding"]["overlap"]
+EMBEDDING_CHUNK_SIZE = config["embedding"]["chunk_size"]
+EMBEDDING_DB_DIR = config["embedding"]["db_dir"]
+
+# LLM
+LLM_MODEL = config["llm"]["model"]
+LLM_TEMPERATURE = config["llm"]["temperature"]
+LLM_TOP_K = config["llm"]["k"]
+LLM_PROMPT = config["llm"]["prompt"]
+
 
 st.set_page_config(layout="wide")
 st.title("📄 PDF RAG Assistant")
@@ -15,16 +38,23 @@ with st.sidebar:
     st.header("Upload Documents")
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     if uploaded_file:
-        save_pdf(uploaded_file)
+        save_pdf(uploaded_file, PDF_DOC_DIR)
         extracted_text = extract_text_from_pdf(uploaded_file)
 
         if extracted_text:
             st.success(f"Extracted text from {uploaded_file.name}")
 
             # DEBUG:
-            # debug_save_pdf_in_text(uploaded_file, extracted_text)
+            debug_save_pdf_in_text(uploaded_file, extracted_text, PDF_TEXTS_DIR)
 
-            db = embedding_data(extracted_text, uploaded_file.name)
+            db = embedding_data(
+                extracted_text,
+                uploaded_file.name,
+                EMBEDDING_CHUNK_SIZE,
+                EMBEDDING_OVERLAP,
+                EMBEDDING_MODEL,
+                EMBEDDING_DB_DIR,
+            )
             st.info(f"Stored {uploaded_file.name} in vectordb")
 
         else:
@@ -44,8 +74,12 @@ if submit_button and user_input:
 
     # rag
     with st.spinner("Searching and Generating..."):
-        search_results = search_similar_documents(user_input)
-        ans = generate_answer(user_input, search_results)
+        search_results = search_similar_documents(
+            user_input, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR
+        )
+        ans = generate_answer(
+            user_input, search_results, LLM_MODEL, LLM_TEMPERATURE, LLM_PROMPT
+        )
 
     # display answer
     with st.chat_message("assistant"):
