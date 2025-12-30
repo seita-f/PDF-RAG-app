@@ -35,7 +35,7 @@ If necessary, adjust the parameters in [`config/config.yaml`](https://github.com
 
 
 # Evaluate
-Evaluated RAG system based on the Ragas results. <br>
+Evaluated RAG system based on the **RAGAS** results. <br>
 ### 1. Configuration
 | Configuration Item | Value |
 | :--- | :--- |
