@@ -1,14 +1,14 @@
 # PDF Data
 pdf:
-  doc_dir:  .data/uploads
-  text_dir: .data/texts   # DEBUG for extracted texts
+  doc_dir:  data/uploads
+  text_dir: data/texts   # DEBUG for extracted texts
 
 # Embedding settings
 embedding:
   model: text-embedding-3-small  # openAI light model
   chunk_size: 1000 
   overlap: 200
-  db_dir: ./data/chroma_db 
+  db_dir: data/chroma_db 
 
 # LLM settings
 llm:
