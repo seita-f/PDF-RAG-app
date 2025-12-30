@@ -25,10 +25,26 @@ Build and run the application using Docker
 docker compose build
 docker compose up
 ```
+Evaluate RAG
+```
+# suppose container is up
+uv run src/pdf_rag/rag/evals/evals.py
+```
 
 If necessary, adjust the parameters in [`config/config.yaml`](https://github.com/seita-f/PDF-RAG-app/blob/main/config/config.yaml). <br><br>
 
 
 # Evaluate
-[RAGAS](https://docs.ragas.io/en/stable/getstarted/) <br>
+Evaluated RAG system based on the Ragas results. <br>
+| Evaluation LLM | Value |
+| :--- | :--- |
+| **Model** | gpt-4 |
+| **Temperature** | 0.2 |
+| Metric | Description |
+<br>
+| :--- | :--- |
+| **Context Recall** | Measures the retriever's ability to find all the necessary information required to answer the question. |
+| **Faithfulness** | Evaluates if the answer is derived solely from the retrieved context, ensuring no hallucinations. |
+| **Factual Correctness** | Assesses the factual accuracy of the generated answer by comparing it against the ground truth. |
+| **Semantic Similarity** | Measures the semantic overlap between the generated answer and the ground truth. |
 
