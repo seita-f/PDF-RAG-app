@@ -55,7 +55,7 @@ with st.sidebar:
                 EMBEDDING_MODEL,
                 EMBEDDING_DB_DIR,
             )
-            st.info(f"Stored {uploaded_file.name} in vectordb")
+            st.info(f"Stored {uploaded_file.name}")
 
         else:
             st.error("Failed to extract/vectorized text from PDF.")
