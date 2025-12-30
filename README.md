@@ -36,12 +36,13 @@ If necessary, adjust the parameters in [`config/config.yaml`](https://github.com
 
 # Evaluate
 Evaluated RAG system based on the Ragas results. <br>
-| Evaluation LLM | Value |
+LLM Model:
+| LLM | Value |
 | :--- | :--- |
 | **Model** | gpt-4 |
 | **Temperature** | 0.2 |
 | Metric | Description |
-<br>
+Metric: <br>
 | :--- | :--- |
 | **Context Recall** | Measures the retriever's ability to find all the necessary information required to answer the question. |
 | **Faithfulness** | Evaluates if the answer is derived solely from the retrieved context, ensuring no hallucinations. |
