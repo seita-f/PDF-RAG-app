@@ -3,6 +3,7 @@ import os
 from pdfminer.high_level import extract_text
 from pdfminer.layout import LAParams
 
+
 def extract_text_from_pdf(pdf_file):
     try:
         laparams = LAParams(
@@ -13,8 +14,8 @@ def extract_text_from_pdf(pdf_file):
 
         # Normalize text data
 
-        # [to-do] I would like to add the funciton to deal with images in pdf 
-        
+        # [to-do] I would like to add the funciton to deal with images in pdf
+
         # text = '\n'.join(text)
         return text
 
@@ -23,8 +24,8 @@ def extract_text_from_pdf(pdf_file):
         return None
 
 
-def debug_save_pdf_in_text(uploaded_file, extracted_text):
-    save_path = "data/uploads"
+def debug_save_pdf_in_text(uploaded_file, extracted_text, text_dir):
+    save_path = text_dir
     os.makedirs(save_path, exist_ok=True)
 
     txt_filename = os.path.join(save_path, uploaded_file.name.replace(".pdf", ".txt"))
@@ -33,14 +34,23 @@ def debug_save_pdf_in_text(uploaded_file, extracted_text):
         file.write(extracted_text)
 
 
-def save_pdf(uploaded_file):
-    save_path = "data/uploads"
+def save_pdf(uploaded_file, doc_dir):
+    save_path = doc_dir
     os.makedirs(save_path, exist_ok=True)
-    
+
     file_path = os.path.join(save_path, uploaded_file.name)
-    
+
     # write in binary mode
     with open(file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
-        
+
     return file_path
+
+
+def main():
+    # pass fo now
+    pass
+
+
+if __name__ == "__main__":
+    main()
