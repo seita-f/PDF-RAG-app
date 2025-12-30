@@ -3,3 +3,5 @@
 .venv
 
 # data/chroma_db/
+# data/texts
+# data/pdf
