@@ -10,13 +10,12 @@ embedding:
   overlap: 200
   db_dir: data/chroma_db 
 
-# LLM settings
+# LLM settings for RAG
 llm:
   model: gpt-4o-mini  
   # search_type: mmr          
   temperature: 0.2
   k: 3
-  # fetch_k: 20
   max_token: 1024
   prompt: |
     You are a professional assistant. Answer the user's question using ONLY the following context provided.
@@ -29,3 +28,13 @@ llm:
     {question}
 
     Answer:
+
+# Evaluate RAG
+eval:  
+  llm:
+    model: gpt-4o   # higher performance model
+    temperature: 0.2
+  golden_dataset: config/eval_gold_dataset.json
+  log_dir: src/pdf_rag/rag/evals/logs
+  result_dir: src/pdf_rag/rag/evals/result  # visualize comparisons of experiments
+

@@ -28,3 +28,7 @@ docker compose up
 
 If necessary, adjust the parameters in [`config/config.yaml`](https://github.com/seita-f/PDF-RAG-app/blob/main/config/config.yaml). <br><br>
 
+
+# Evaluate
+[RAGAS](https://docs.ragas.io/en/stable/getstarted/) <br>
+
