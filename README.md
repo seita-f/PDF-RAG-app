@@ -30,31 +30,35 @@ Evaluate RAG
 ```
 # suppose container is up
 docker compose exec app bash
-uv run src/pdf_rag/rag/evals/evals.py
+# retrieval evaluation
+uv run src/pdf_rag/rag/evals/evals.py --mode retrieval
+# generator evaluation
+uv run src/pdf_rag/rag/evals/evals.py --mode generator
 ```
 
 If necessary, adjust the parameters in [`config/config.yaml`](https://github.com/seita-f/PDF-RAG-app/blob/main/config/config.yaml). <br><br>
 
 
-# Evaluate
+<!-- # Evaluate
 Evaluated RAG system based on the **RAGAS** results. <br>
 ### 1. Configuration
 | Configuration Item | Value |
-| :--- | :--- |
+| --- | --- |
 | LLM Model | gpt-4 |
-| Temperature | 0.2 |
-
+| Temperature | 0 |
+(golden dataset)[https://github.com/seita-f/PDF-RAG-app/blob/main/config/eval_golden_dataset.json]
 ---
 
-### 2.1 Retriever Evaluation
-To-do: Context Precision, Context Recall
+### 2.1 Retrieval Evaluation
+| Embedding Model | Chunk Size | Overlap | Context Precision | Context Recall |
+| --- | --- | --- | --- | --- | 
+| text-embedding-3-small | 1024 | 200 | 0.400 | 0.400 |
 
-### 2.2. Retriever Evaluation after text mining
-To-do: text mining 
+
+### 2.2. Retrieval Evaluation after text mining
+To-do: text mining etc
 
 ### 3. Generator Evaluation
-To-do: Faithfulness, Answer Relevancy
+To-do: Faithfulness, Answer Relevancy -->
 
 
-### 4. Retriever & Generator Evaluation
-To-do

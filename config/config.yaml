@@ -6,7 +6,7 @@ pdf:
 # Embedding settings
 embedding:
   model: text-embedding-3-small  # openAI light model
-  chunk_size: 1000 
+  chunk_size: 1024
   overlap: 200
   db_dir: data/chroma_db 
 
@@ -15,7 +15,7 @@ llm:
   model: gpt-4o-mini  
   # search_type: mmr          
   temperature: 0.1 
-  k: 3
+  k: 10
   max_token: 1024
   prompt: |
     You are a professional assistant. Answer the user's question using ONLY the following context provided.
@@ -34,8 +34,7 @@ eval:
   llm:
     model: gpt-4o   # higher performance model
     temperature: 0
-  golden_dataset: config/eval_gold_dataset.json
+  golden_dataset: config/eval_golden_dataset.json
   log_dir: src/pdf_rag/rag/evals/logs
   result_dir: src/pdf_rag/rag/evals/result  # visualize comparisons of experiments
-  mode: retrieval    # retrieval, generator
 

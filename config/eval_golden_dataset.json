@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What is the role and importance of the 'Dry_Clover_g' component in pasture modeling?",
+    "ground_truth": "Dry_Clover_g captures the nitrogen-fixing clover component, which is essential for maintaining pasture nutrition."
+  },
+  {
+    "question": "Over what time period and in which regions was the data collection conducted?",
+    "ground_truth": "Data was collected over a three-year period from 2014 to 2017 across 19 locations in four Australian states: New South Wales, Victoria, Tasmania, and Western Australia."
+  },
+  {
+    "question": "Why was sampling avoided immediately after rainfall events?",
+    "ground_truth": "Sampling was avoided after rain to prevent soil contamination and to maintain consistent measurement conditions."
+  },
+  {
+    "question": "What is the specific technical challenge associated with using capacitance meters?",
+    "ground_truth": "Capacitance meters require complex, pasture-specific calibration and often yield inconsistent results across different environmental conditions."
+  },
+  {
+    "question": "What are the specific temperature and time requirements for drying the pasture samples?",
+    "ground_truth": "All fractions were dried at 70°C for a duration of 48 hours following standard protocols."
+  },
+  {
+    "question": "What is the goal of the MABe22 dataset?",
+    "ground_truth": "The goal of the MABe22 dataset is to benchmark representation learning models for behavior analysis using data from biology experiments."
+  },
+  {
+    "question": "What organisms are included in the MABe22 dataset?",
+    "ground_truth": "The MABe22 dataset includes data from three model organisms: mice, beetles (rove beetles), and flies (fruit flies)."
+  },
+  {
+    "question": "What kind of ablation study was performed for the video representation learning methods?",
+    "ground_truth": "For each video representation learning method, we perform an ablation study on the key hyperparameter for the respective method and its effect on downstream task performance."
+  },
+  {
+    "question": "What dimensionality (D) is used for the learned representations across different methods?",
+    "ground_truth": "For video models, D is 128. For trajectory methods, D is 128 for mice and 256 for flies."
+  },
+  {
+    "question": "Which state-of-the-art video representation models and backbones are evaluated?",
+    "ground_truth": "The methods include Masked Autoencoder (MAE) with ViT-B, MaskFeat with MViTv2-S, and pBYOL with a SlowFast backbone."
+  }
+]
