@@ -29,6 +29,7 @@ docker compose up
 Evaluate RAG
 ```
 # suppose container is up
+docker compose exec app bash
 uv run src/pdf_rag/rag/evals/evals.py
 ```
 
@@ -45,13 +46,15 @@ Evaluated RAG system based on the **RAGAS** results. <br>
 
 ---
 
-### 2. Metrics Overview
-| Metric | Description |
-| :--- | :--- |
-| Context Recall | Measures the retriever's ability to find all the necessary information required to answer the question. |
-| Faithfulness | Evaluates if the answer is derived solely from the retrieved context, ensuring no hallucinations. |
-| Factual Correctness | Assesses the factual accuracy of the generated answer by comparing it against the ground truth. |
-| Semantic Similarity | Measures the semantic overlap between the generated answer and the ground truth. |
+### 2.1 Retriever Evaluation
+To-do: Context Precision, Context Recall
+
+### 2.2. Retriever Evaluation after text mining
+To-do: text mining 
+
+### 3. Generator Evaluation
+To-do: Faithfulness, Answer Relevancy
 
 
-
+### 4. Retriever & Generator Evaluation
+To-do

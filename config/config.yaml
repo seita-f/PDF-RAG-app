@@ -14,7 +14,7 @@ embedding:
 llm:
   model: gpt-4o-mini  
   # search_type: mmr          
-  temperature: 0.2
+  temperature: 0.1 
   k: 3
   max_token: 1024
   prompt: |
@@ -33,8 +33,9 @@ llm:
 eval:  
   llm:
     model: gpt-4o   # higher performance model
-    temperature: 0.2
+    temperature: 0
   golden_dataset: config/eval_gold_dataset.json
   log_dir: src/pdf_rag/rag/evals/logs
   result_dir: src/pdf_rag/rag/evals/result  # visualize comparisons of experiments
+  mode: retrieval    # retrieval, generator
 

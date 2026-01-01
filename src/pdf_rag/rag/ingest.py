@@ -14,7 +14,7 @@ def extract_text_from_pdf(pdf_file):
 
         # Normalize text data
 
-        # [to-do] I would like to add the funciton to deal with images in pdf
+        # [to-do] May add the funciton to deal with images in pdf
 
         # text = '\n'.join(text)
         return text

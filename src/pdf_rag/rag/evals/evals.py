@@ -1,3 +1,7 @@
+import os
+from datetime import datetime
+from pathlib import Path
+
 import pandas as pd
 import yaml
 from datasets import Dataset
@@ -6,16 +10,14 @@ from ragas import evaluate
 from ragas.embeddings import embedding_factory
 from ragas.llms import llm_factory
 from ragas.metrics import (
-    FactualCorrectness,
+    AnswerRelevancy,
+    ContextPrecision,
+    ContextRecall,
     Faithfulness,
-    LLMContextRecall,
-    SemanticSimilarity,
 )
 
 from src.pdf_rag.rag.embedding import search_similar_documents
 from src.pdf_rag.rag.generate import generate_answer
-
-async_client = AsyncOpenAI()
 
 # load config
 with open("config/config.yaml") as file:
@@ -37,18 +39,19 @@ LLM_PROMPT = config["llm"]["prompt"]
 # EVAL
 EVAL_LLM_MODEL = config["eval"]["llm"]["model"]
 EVAL_LLM_TEMPERATURE = config["eval"]["llm"]["temperature"]
-EVAL_LOGS_DIR = config["eval"]["log_dir"]
+EVAL_LOGS_DIR = Path(config["eval"]["log_dir"])
+EVAL_MODE = config["eval"]["mode"]
 
+# Setup LLM
 async_client = AsyncOpenAI()
-
 evaluator_llm = llm_factory(model=EVAL_LLM_MODEL, client=async_client)
 evaluator_embeddings = embedding_factory(model=EMBEDDING_MODEL, client=async_client)
 
 metrics = [
-    LLMContextRecall(llm=evaluator_llm),
-    FactualCorrectness(llm=evaluator_llm),
+    ContextRecall(llm=evaluator_llm),
+    ContextPrecision(llm=evaluator_llm),
     Faithfulness(llm=evaluator_llm),
-    SemanticSimilarity(embeddings=evaluator_embeddings),
+    AnswerRelevancy(embeddings=evaluator_embeddings),
 ]
 
 
@@ -89,34 +92,35 @@ def run_evaluation():
     return results
 
 
-"""
-To-do: csv -> can not split columns by ','
-"""
-# def save_evaluation_results(results):
-#     os.makedirs(EVAL_LOGS_DIR, exist_ok=True)
+def save_evaluation_results(results):
+    sava_dir = EVAL_LOGS_DIR / EVAL_MODE
+    os.makedirs(sava_dir, exist_ok=True)
 
-#     # filename
-#     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-#     file_name = f"eval_{timestamp}.csv"
-#     save_path = os.path.join(EVAL_LOGS_DIR, file_name)
+    # filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"eval_{timestamp}.csv"
+    save_path = os.path.join(EVAL_LOGS_DIR, file_name)
 
-#     df = results.to_pandas()
+    df = results.to_pandas()
 
-#     # params to save
-#     df["run_at"] = timestamp
-#     df["llm_model"] = LLM_MODEL
-#     df["top_k"] = LLM_TOP_K
-#     df["embed_model"] = EMBEDDING_MODEL
-#     df["chunk_size"] = EMBEDDING_CHUNK_SIZE
-#     df["chunk_overlap"] = EMBEDDING_OVERLAP
-#     df["eval_model"] = EVAL_LLM_MODEL
+    # params to save
+    df["llm_model"] = LLM_MODEL
+    df["top_k"] = LLM_TOP_K
+    df["embed_model"] = EMBEDDING_MODEL
+    df["chunk_size"] = EMBEDDING_CHUNK_SIZE
+    df["chunk_overlap"] = EMBEDDING_OVERLAP
+    df["eval_model"] = EVAL_LLM_MODEL
 
-#     df.to_csv(save_path, index=False)
-#     print(f"\nResults are saved in {save_path}")
+    # Drop some columns for now
+    drop_cols = ["user_input", "retrieved_contexts", "response", "reference"]
+    df = df.drop(drop_cols, axis=1)
+
+    df.to_csv(save_path, index=False)
+    print(f"\nResults are saved in {save_path}")
 
 
 if __name__ == "__main__":
     results = run_evaluation()
-    # save_evaluation_results(
-    #     results,
-    # )
+    save_evaluation_results(
+        results,
+    )
