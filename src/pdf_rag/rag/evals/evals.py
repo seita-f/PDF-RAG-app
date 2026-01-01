@@ -1,20 +1,17 @@
-import os
+import argparse
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import yaml
 from datasets import Dataset
+from langchain_openai import OpenAIEmbeddings
 from openai import AsyncOpenAI
 from ragas import evaluate
-from ragas.embeddings import embedding_factory
+from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.llms import llm_factory
-from ragas.metrics import (
-    AnswerRelevancy,
-    ContextPrecision,
-    ContextRecall,
-    Faithfulness,
-)
+from ragas.metrics import AnswerRelevancy, ContextPrecision, ContextRecall, Faithfulness
+from ragas.run_config import RunConfig
 
 from src.pdf_rag.rag.embedding import search_similar_documents
 from src.pdf_rag.rag.generate import generate_answer
@@ -33,6 +30,7 @@ EMBEDDING_DB_DIR = config["embedding"]["db_dir"]
 # LLM
 LLM_MODEL = config["llm"]["model"]
 LLM_TEMPERATURE = config["llm"]["temperature"]
+LLM_MAX_TOKEN = config["llm"]["max_token"]
 LLM_TOP_K = config["llm"]["k"]
 LLM_PROMPT = config["llm"]["prompt"]
 
@@ -40,19 +38,68 @@ LLM_PROMPT = config["llm"]["prompt"]
 EVAL_LLM_MODEL = config["eval"]["llm"]["model"]
 EVAL_LLM_TEMPERATURE = config["eval"]["llm"]["temperature"]
 EVAL_LOGS_DIR = Path(config["eval"]["log_dir"])
-EVAL_MODE = config["eval"]["mode"]
 
 # Setup LLM
 async_client = AsyncOpenAI()
 evaluator_llm = llm_factory(model=EVAL_LLM_MODEL, client=async_client)
-evaluator_embeddings = embedding_factory(model=EMBEDDING_MODEL, client=async_client)
+evaluator_embeddings = LangchainEmbeddingsWrapper(
+    OpenAIEmbeddings(model=EMBEDDING_MODEL)
+)
 
+# AnswerRelevancy strictness: https://github.com/vibrantlabsai/ragas/issues/2351
 metrics = [
     ContextRecall(llm=evaluator_llm),
     ContextPrecision(llm=evaluator_llm),
     Faithfulness(llm=evaluator_llm),
-    AnswerRelevancy(embeddings=evaluator_embeddings),
+    AnswerRelevancy(embeddings=evaluator_embeddings, strictness=1),
 ]
+
+
+def save_evaluation_report(results, mode):
+    save_path_dir = EVAL_LOGS_DIR / mode
+    save_path_dir.mkdir(parents=True, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_path = save_path_dir / f"eval_report_{timestamp}.txt"
+
+    summary_results_str = str(results)
+
+    # details for each data's evaluation
+    # df_details = results.to_pandas()
+
+    # Average Score
+    # numeric_scores = df_details.select_dtypes(include=['number']).mean().to_dict()
+
+    # Report
+    summary_text = f"""
+==================================================
+RAG EVALUATION REPORT
+==================================================
+Run Time:    {timestamp}
+--------------------------------------------------
+[METRICS SUMMARY]
+{summary_results_str}
+
+[HYPERPARAMETERS - Embedding]
+- Embed Model:  {EMBEDDING_MODEL}
+- Overlap:      {EMBEDDING_OVERLAP}
+- Chunk Size:   {EMBEDDING_CHUNK_SIZE}
+
+[HYPERPARAMETERS - LLM]
+- Model:        {LLM_MODEL}
+- Temperature   {LLM_TEMPERATURE}
+- Max Token     {LLM_MAX_TOKEN}
+- Top K         {LLM_TOP_K}
+- Prompt        {LLM_PROMPT}
+==================================================
+"""
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(summary_text)
+        # f.write("\n[DETAILED LOGS PER QUERY]\n")
+        # f.write(df_details.to_string(index=False))
+
+    print(f"✅ Report successfully saved at: {file_path}")
 
 
 def run_evaluation():
@@ -84,43 +131,28 @@ def run_evaluation():
     dataset = Dataset.from_dict(data)
 
     print("Evaluating metrics...")
-    results = evaluate(dataset=dataset, metrics=metrics)
+    run_config = RunConfig(max_workers=1, timeout=60)
+    results = evaluate(dataset=dataset, metrics=metrics, run_config=run_config)
 
-    print("\n--- Evaluation Results ---")
     print(results)
 
     return results
 
 
-def save_evaluation_results(results):
-    sava_dir = EVAL_LOGS_DIR / EVAL_MODE
-    os.makedirs(sava_dir, exist_ok=True)
+def main():
+    parser = argparse.ArgumentParser(description="RAG Evaluation Script")
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["retrieval", "generator"],
+        default="retrieval",
+        help="Evaluation mode: retrieval or generator",
+    )
+    args = parser.parse_args()
 
-    # filename
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"eval_{timestamp}.csv"
-    save_path = os.path.join(EVAL_LOGS_DIR, file_name)
-
-    df = results.to_pandas()
-
-    # params to save
-    df["llm_model"] = LLM_MODEL
-    df["top_k"] = LLM_TOP_K
-    df["embed_model"] = EMBEDDING_MODEL
-    df["chunk_size"] = EMBEDDING_CHUNK_SIZE
-    df["chunk_overlap"] = EMBEDDING_OVERLAP
-    df["eval_model"] = EVAL_LLM_MODEL
-
-    # Drop some columns for now
-    drop_cols = ["user_input", "retrieved_contexts", "response", "reference"]
-    df = df.drop(drop_cols, axis=1)
-
-    df.to_csv(save_path, index=False)
-    print(f"\nResults are saved in {save_path}")
+    results = run_evaluation()
+    save_evaluation_report(results, args.mode)
 
 
 if __name__ == "__main__":
-    results = run_evaluation()
-    save_evaluation_results(
-        results,
-    )
+    main()
