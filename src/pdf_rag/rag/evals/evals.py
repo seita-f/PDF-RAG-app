@@ -30,7 +30,7 @@ EMBEDDING_DB_DIR = config["embedding"]["db_dir"]
 # LLM
 LLM_MODEL = config["llm"]["model"]
 LLM_TEMPERATURE = config["llm"]["temperature"]
-LLM_MAX_TOKEN = config["llm"]["max_token"]
+LLM_MAX_TOKEN = config["llm"]["max_tokens"]
 LLM_TOP_K = config["llm"]["k"]
 LLM_PROMPT = config["llm"]["prompt"]
 
@@ -45,14 +45,6 @@ evaluator_llm = llm_factory(model=EVAL_LLM_MODEL, client=async_client)
 evaluator_embeddings = LangchainEmbeddingsWrapper(
     OpenAIEmbeddings(model=EMBEDDING_MODEL)
 )
-
-# AnswerRelevancy strictness: https://github.com/vibrantlabsai/ragas/issues/2351
-metrics = [
-    ContextRecall(llm=evaluator_llm),
-    ContextPrecision(llm=evaluator_llm),
-    Faithfulness(llm=evaluator_llm),
-    AnswerRelevancy(embeddings=evaluator_embeddings, strictness=1),
-]
 
 
 def save_evaluation_report(results, mode):
@@ -102,21 +94,40 @@ Run Time:    {timestamp}
     print(f"✅ Report successfully saved at: {file_path}")
 
 
-def run_evaluation():
+def run_evaluation(mode):
     df_golden = pd.read_json(config["eval"]["golden_dataset"])
 
     questions = df_golden["question"].tolist()
     ground_truths = df_golden["ground_truth"].tolist()
+    expected_contexts = df_golden["context_answer"].tolist()
 
     answers = []
     contexts = []
 
+    if mode == "retrieval":
+        metrics = [
+            ContextRecall(llm=evaluator_llm),
+            ContextPrecision(llm=evaluator_llm),
+        ]
+        print(f"--- Mode: {mode} (Evaluating Search Quality) ---")
+    else:
+        metrics = [
+            Faithfulness(llm=evaluator_llm),
+            AnswerRelevancy(embeddings=evaluator_embeddings, strictness=1),
+        ]
+        print(f"--- Mode: {mode} (Evaluating Generation Quality) ---")
+
     print(f"Generating answers for {len(questions)} queries...")
-    for q in questions:
+    for i, q in enumerate(questions):
         relevant_docs = search_similar_documents(
             q, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR
         )
-        ans = generate_answer(q, relevant_docs, LLM_MODEL, LLM_TEMPERATURE, LLM_PROMPT)
+        if mode == "retrieval":
+            ans = ground_truths[i]  # Not calling LLM
+        else:
+            ans = generate_answer(
+                q, relevant_docs, LLM_MODEL, LLM_TEMPERATURE, LLM_PROMPT, LLM_MAX_TOKEN
+            )
 
         answers.append(ans)
         contexts.append([doc.page_content for doc, _ in relevant_docs])
@@ -127,6 +138,7 @@ def run_evaluation():
         "answer": answers,
         "contexts": contexts,
         "ground_truth": ground_truths,
+        "reference_contexts": [[expected_contexts[i]] for i in range(len(questions))],
     }
     dataset = Dataset.from_dict(data)
 
@@ -150,7 +162,7 @@ def main():
     )
     args = parser.parse_args()
 
-    results = run_evaluation()
+    results = run_evaluation(args.mode)
     save_evaluation_report(results, args.mode)
 
 

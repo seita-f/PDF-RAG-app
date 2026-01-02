@@ -51,16 +51,20 @@ Briefly evaluated RAG system based on the **RAGAS** results. <br>
 | Temperature | 0 |
 ---
 
-### 2.1 Retrieval Evaluation
+### 2 Ex: Retrieval Evaluation
 | Embedding Model | Chunk Size | Overlap | Context Precision | Context Recall |
 | --- | --- | --- | --- | --- | 
-| text-embedding-3-small | 1024 | 200 | 0.8000 | 0.6833 |
-| text-embedding-3-small | 512 | 100 | 0.8000 | 0.6333 |
+| text-embedding-3-small | 1024 | 200 | 0.8000 | 0.7333 |
 
-### 2.2. Retrieval Evaluation after text mining
-To-do: text mining etc
+### 3. Ex: Generator Evaluation
+| Embedding Model | Chunk Size | Overlap |
+| --- | --- | --- | 
+| text-embedding-3-small | 1024 | 200 |
+<br>
+| LLM Model | Temperature | Top K | Max Tokens | Faithfulness | Answer Relevancy |
+| --- | --- | --- | --- | --- | --- |
+| gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
 
-### 3. Generator Evaluation
-To-do: Faithfulness, Answer Relevancy
+
 
 

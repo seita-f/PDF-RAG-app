@@ -1,4 +1,5 @@
 import os
+import unicodedata
 
 from pdfminer.high_level import extract_text
 from pdfminer.layout import LAParams
@@ -7,16 +8,16 @@ from pdfminer.layout import LAParams
 def extract_text_from_pdf(pdf_file):
     try:
         laparams = LAParams(
-            all_texts=True
+            all_texts=True,
+            char_margin=3.0,
+            line_margin=0.2,
+            word_margin=0.1,
+            boxes_flow=0.5,
         )  # all_texts: include text in graph, table etc
 
         text = extract_text(pdf_file, laparams=laparams)
+        text = unicodedata.normalize("NFKC", text)
 
-        # Normalize text data
-
-        # [to-do] May add the funciton to deal with images in pdf
-
-        # text = '\n'.join(text)
         return text
 
     except Exception as e:
