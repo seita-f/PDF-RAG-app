@@ -15,7 +15,7 @@ llm:
   model: gpt-4o-mini  
   # search_type: mmr          
   temperature: 0.1 
-  k: 10
+  k: 3
   max_token: 1024
   prompt: |
     You are a professional assistant. Answer the user's question using ONLY the following context provided.
