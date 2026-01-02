@@ -44,11 +44,11 @@ Adjust the parameters in [`config/config.yaml`](https://github.com/seita-f/PDF-R
 # Evaluate
 Briefly evaluated RAG system based on the **RAGAS** results. <br>
 ### 1. Configuration
+[golden dataset](https://github.com/seita-f/PDF-RAG-app/blob/main/config/eval_golden_dataset.json)
 | Configuration Item | Value |
 | --- | --- |
 | LLM Model | gpt-4 |
 | Temperature | 0 |
-(golden dataset)[https://github.com/seita-f/PDF-RAG-app/blob/main/config/eval_golden_dataset.json]
 ---
 
 ### 2.1 Retrieval Evaluation
