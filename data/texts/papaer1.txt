@@ -4,8 +4,11 @@
 2
 
 t
+
 c
+
 O
+
 7
 2
 
@@ -13,9 +16,12 @@ O
 
 V
 C
+
 .
+
 s
 c
+
 [
 
 1
@@ -25,16 +31,24 @@ v
 9
 2
 2
+
 .
+
 0
 1
 5
 2
+
 :
+
 v
+
 i
+
 X
+
 r
+
 a
 
 ESTIMATING PASTURE BIOMASS FROM TOP-VIEW IMAGES:
@@ -65,9 +79,7 @@ released and hosted in a Kaggle competition that challenges the international Ma
 community with the task of pasture biomass estimation. The dataset is available on the official Kaggle
 webpage: https://www.kaggle.com/competitions/csiro-biomass
 
-1
-
-Introduction
+1 Introduction
 
 Accurate estimation of pasture biomass is essential for profitable and sustainable grazing management. It supports
 agricultural productivity while preserving ecosystem integrity. Currently, producers are still heavily reliant on subjective
@@ -223,9 +235,7 @@ measurement errors, and cross-validation between height and biomass measurements
 
 4
 
-3.3
-
-Image Acquisition Systems
+3.3 Image Acquisition Systems
 
 Photography was conducted using a diverse range of camera systems across varying imaging conditions. The equipment
 used included both consumer-grade and professional-grade devices commonly accessible to researchers and practitioners,
@@ -238,16 +248,16 @@ Apple
 Canon
 HTC
 NIKON
-OLYMPUS IMAGING CORP.
+OLYMPUS IMAGING CORP. SP510UZ
 Sony
+
+D5833
 
 Models Used
 iPhone 4, iPhone 5s
 IXUS 125 HS, COOLPIX AW110
 0PJA10
 COOLPIX AW110
-SP510UZ
-D5833
 
 Images were captured from above the quadrat at varying heights depending on field conditions and equipment
 capabilities, with the primary objective of capturing the complete quadrat area at sufficient resolution for detailed
@@ -257,9 +267,7 @@ imaging equipment and field scenarios.
 
 4 Data Processing and Evaluation
 
-4.1
-
-Image Normalization
+4.1 Image Normalization
 
 Raw images required extensive pre-processing due to variations in perspective and camera positioning across diverse
 collection sites and equipment types. To establish consistent regions of interest (ROIs), manual annotation of quadrat
@@ -299,9 +307,13 @@ produced five key biomass variables:
 5
 
 • Dry_Green_g: Green vegetation other than clover (grams)
+
 • Dry_Dead_g: Senescent material (grams)
+
 • Dry_Clover_g: Clover component (grams)
+
 • GDM_g: Green dry matter, calculated as the sum of green vegetation and clover (grams)
+
 • Dry_Total_g: Total biomass, combining all components (grams)
 
 These measurements retain the original quadrat-scale units rather than being extrapolated to per-hectare values, ensuring
@@ -340,22 +352,24 @@ Sampling_Date
 State
 Species
 Pre_GSHH_NDVI NDVI from GreenSeeker
-Height_Ave_cm
+Height_Ave_cm Average height (falling plate)
 Dry_Green_g
 Dry_Dead_g
 Dry_Clover_g
 GDM_g
 Dry_Total_g
 
-Average height (falling plate)
-Green vegetation other than clover
+Green vegetation other than clover grams
+grams
 Senescent material
 Clover component
-Green dry matter (Green + Clover)
+grams
+Green dry matter (Green + Clover) grams
+grams
 Total biomass (all components)
 
-Train Val/Test
 Unit
+Train Val/Test
 ✓
 -
 YYYY-MM-DD ✓
@@ -368,17 +382,11 @@ YYYY-MM-DD ✓
 ✓
 cm
 ✓
-grams
 ✓
-grams
 ✓
-grams
 ✓
-grams
 ✓
-grams
 
-✓
 ×
 ×
 ×
@@ -388,6 +396,8 @@ grams
 ✓
 ✓
 ✓
+✓
+
 ✓
 
 The five biomass target variables represent the core prediction objectives for machine learning models. Dry_Green_g
@@ -412,16 +422,19 @@ ytrans = log(1 + y)
 
 where y represents the original biomass measurements in grams. This transformation helps normalize the distribution
 of biomass values and reduces the impact of extreme outliers on model evaluation.
+
 The final evaluation score is computed as a weighted sum of individual R2 values for each transformed target variable:
 
 Final Score =
 
 5
+
 (cid:88)
 
 i=1
 
 wi × R2
+
 i
 
 (2)
@@ -483,24 +496,21 @@ ecosystem responses, and global change. Annu. Rev. Environ. Resour., 29(1):261�
 
 7
 
-[4] Australian
-
-Bureau
+[4] Australian Bureau
 
 estimates.
-National
 https://www.abs.gov.au/statistics/environment/environmental-management/national-land-account-experimental-
 estimates/latest-release#land-use, 2024. Accessed: October 28, 2025.
 
+of Statistics.
+
 experimental
 
-Statistics.
+National
 
 account
 
 land
-
-of
 
 [5] C. Edwards, L. H. McCormick, and W. D. Hoffman. Pasture skills audit – a reflection on extension. In APEN
 National Forum: hitting a Moving target Sustaining landscapes, livelihoods and lifestyles in a changing world,
@@ -522,6 +532,7 @@ height. Agronomy Journal, 99:530–536, 2007.
 
 [10] Michael T Schaefer and David W Lamb. A combination of plant ndvi and lidar measurements improve the
 estimation of pasture biomass in tall fescue (festuca arundinacea var. fletcher). Remote Sensing, 8(2):109, 2016.
+
 [11] C Blore. Estimating pasture biomass with active optical sensors. Advances in Animal Biosciences, 8(2):754–757,
 
 2017.

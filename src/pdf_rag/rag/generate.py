@@ -3,8 +3,10 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 
-def generate_answer(query: str, relevant_docs, model, temperature, prompt_template):
-    llm = ChatOpenAI(model=model, temperature=temperature)
+def generate_answer(
+    query: str, relevant_docs, model, temperature, prompt_template, max_tokens
+):
+    llm = ChatOpenAI(model=model, temperature=temperature, max_tokens=max_tokens)
     prompt = ChatPromptTemplate.from_template(prompt_template)
     context_text = "\n\n".join([doc.page_content for doc, _ in relevant_docs])
 

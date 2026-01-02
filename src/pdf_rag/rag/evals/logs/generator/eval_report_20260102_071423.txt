@@ -2,21 +2,21 @@
 ==================================================
 RAG EVALUATION REPORT
 ==================================================
-Run Time:    20260102_000013
+Run Time:    20260102_071423
 --------------------------------------------------
 [METRICS SUMMARY]
-{'context_recall': 0.8000, 'context_precision': 0.6333, 'faithfulness': 0.9750, 'answer_relevancy': 0.6838}
+{'faithfulness': 0.9600, 'answer_relevancy': 0.7738}
 
 [HYPERPARAMETERS - Embedding]
 - Embed Model:  text-embedding-3-small
-- Overlap:      100
-- Chunk Size:   512
+- Overlap:      200
+- Chunk Size:   1024
 
 [HYPERPARAMETERS - LLM]
 - Model:        gpt-4o-mini
-- Temperature   0.1
+- Temperature   0
 - Max Token     1024
-- Top K         3
+- Top K         5
 - Prompt        You are a professional assistant. Answer the user's question using ONLY the following context provided.
 If the answer is not contained within the context, respond with "I am sorry, but I could not find the information in the provided documents.
 

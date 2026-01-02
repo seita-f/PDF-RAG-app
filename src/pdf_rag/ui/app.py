@@ -28,7 +28,7 @@ LLM_MODEL = config["llm"]["model"]
 LLM_TEMPERATURE = config["llm"]["temperature"]
 LLM_TOP_K = config["llm"]["k"]
 LLM_PROMPT = config["llm"]["prompt"]
-
+LLM_MAX_TOKEN = config["llm"]["max_tokens"]
 
 st.set_page_config(layout="wide")
 st.title("📄 PDF RAG Assistant")
@@ -78,7 +78,12 @@ if submit_button and user_input:
             user_input, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR
         )
         ans = generate_answer(
-            user_input, search_results, LLM_MODEL, LLM_TEMPERATURE, LLM_PROMPT
+            user_input,
+            search_results,
+            LLM_MODEL,
+            LLM_TEMPERATURE,
+            LLM_PROMPT,
+            LLM_MAX_TOKEN,
         )
 
     # display answer
