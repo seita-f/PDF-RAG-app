@@ -57,12 +57,13 @@ Briefly evaluated RAG system based on the **RAGAS** results. <br>
 | text-embedding-3-small | 1024 | 200 | 0.8000 | 0.7333 |
 
 ### 3. Ex: Generator Evaluation
+
 | Embedding Model | Chunk Size | Overlap |
-| --- | --- | --- | 
+| :--- | :--- | :--- |
 | text-embedding-3-small | 1024 | 200 |
-<br>
+
 | LLM Model | Temperature | Top K | Max Tokens | Faithfulness | Answer Relevancy |
-| --- | --- | --- | --- | --- | --- |
+| :--- | :--- | :--- | :--- | :--- | :--- |
 | gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
 
 
