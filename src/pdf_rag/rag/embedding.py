@@ -7,7 +7,7 @@ def embedding_data(
     extracted_text, filename, chunk_size, chunk_overlap, model, embedding_db
 ):
     text_splitter = RecursiveCharacterTextSplitter(
-        separator='\n\n',  # split by two line breaks
+        # separator='\n\n',  # split by two line breaks
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
     )
