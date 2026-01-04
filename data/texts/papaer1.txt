@@ -1,56 +1,3 @@
-5
-2
-0
-2
-
-t
-
-c
-
-O
-
-7
-2
-
-]
-
-V
-C
-
-.
-
-s
-c
-
-[
-
-1
-v
-6
-1
-9
-2
-2
-
-.
-
-0
-1
-5
-2
-
-:
-
-v
-
-i
-
-X
-
-r
-
-a
-
 ESTIMATING PASTURE BIOMASS FROM TOP-VIEW IMAGES:
 A DATASET FOR PRECISION AGRICULTURE
 
@@ -62,6 +9,8 @@ Pringle4, Rhys Pirie5, Megan Walker5, and Joshua Whelan5
 3Google
 4University of New England
 5Meat & Livestock Australia
+
+arXiv:2510.22916v1  [cs.CV]  27 Oct 2025
 
 ABSTRACT
 
@@ -79,7 +28,8 @@ released and hosted in a Kaggle competition that challenges the international Ma
 community with the task of pasture biomass estimation. The dataset is available on the official Kaggle
 webpage: https://www.kaggle.com/competitions/csiro-biomass
 
-1 Introduction
+1
+Introduction
 
 Accurate estimation of pasture biomass is essential for profitable and sustainable grazing management. It supports
 agricultural productivity while preserving ecosystem integrity. Currently, producers are still heavily reliant on subjective
@@ -102,13 +52,7 @@ of FrontierSI (previously known as the Cooperative Research Centre for Spatial I
 Australian Government for this project. The annotated dataset discussed here is publicly available under a Creative Commons
 Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) license through the Kaggle competition platform.
 
- 
- 
- 
- 
- 
- 
-Figure 1: Sample images from the training set and their labels. Images cropped to show the internal section of the 70 x
+Figure 1: Sample images from the training set and their labels. Images cropped to show the internal section of the 70 x
 30cm quadrants, and with dry weight of biomass fractions shown (Green, Dead, Clover).
 
 conservation. Traditional biomass measurement methods [5, 6, 7, 8, 9, 10] are typically destructive, time-consuming,
@@ -127,9 +71,11 @@ top-view imagery (shown in Figure 1)). This contribution addresses a critical ga
 annotated datasets that integrate visual, spectral, and structural information for pasture assessment. This enables the
 development of technologies that support both agricultural productivity and environmental sustainability.
 
-2 Related Work
+2
+Related Work
 
-2.1 Traditional Biomass Measurement Methods
+2.1
+Traditional Biomass Measurement Methods
 
 Current approaches to estimating pasture biomass have significant limitations that restrict their practical applications.
 Destructive methods such as clipping and weighing (cut-dry-weigh method) provide high accuracy through direct
@@ -141,8 +87,7 @@ calibration with inconsistent results across different conditions [7].
 
 2
 
-Optical and spectral methods have gained attention because of their potential to provide rapid, nondestructive assess-
-ments. Active Optical Sensors (AOS), originally developed for cropping industries to infer nitrogen levels, measure
+Optical and spectral methods have gained attention because of their potential to provide rapid, nondestructive assessments. Active Optical Sensors (AOS), originally developed for cropping industries to infer nitrogen levels, measure
 vegetation indices like NDVI by directing light beams onto the canopy and calculating optical reflectance [8, 9, 11].
 Research has shown that combining NDVI measurements with height data from LiDAR or mechanical sensors can
 significantly improve the accuracy of biomass estimation, addressing limitations such as NDVI saturation at high
@@ -154,7 +99,8 @@ Remote sensing approaches using satellite and drone imagery, combined with machi
 biomass estimation. However, they require technical expertise, significant computational resources, and extensive
 ground-truth calibration data [12].
 
-2.2 Computer Vision Approaches and Existing Datasets
+2.2
+Computer Vision Approaches and Existing Datasets
 
 Recent advances in computer vision have shown promising results for agricultural applications, with deep learning
 models demonstrating success in crop yield prediction and vegetation analysis. However, pasture systems present
@@ -183,9 +129,11 @@ identification) [19], DeepWeeds (weed detection) [20], and Agriculture-Vision (a
 distinct purposes within the agricultural domain. However, they lack the ground-level, multi-modal measurements
 necessary for detailed pasture biomass estimation across diverse environmental conditions and species compositions.
 
-3 Data Collection
+3
+Data Collection
 
-3.1 Study Sites and Sampling Protocol
+3.1
+Study Sites and Sampling Protocol
 
 Data collection was conducted across 19 locations spanning four Australian states over a three-year period (2014–2017),
 representing a wide range of soil, climate, and seasonal conditions across diverse grazing landscapes in the temperate
@@ -206,7 +154,7 @@ systems (see Table 1) to accommodate differing field conditions and research tea
 
 3
 
-Figure 2: Geographic distribution of sampling sites across Australia [2]
+Figure 2: Geographic distribution of sampling sites across Australia [2]
 
 obtained using a GreenSeeker handheld sensor positioned approximately 1m above the center of each quadrat, with an
 average of 100 readings recorded to account for sensor variability and ensure measurement reliability. Compressed
@@ -218,7 +166,8 @@ using electric clippers. The harvested material was immediately collected in lab
 and maintain traceability. Post-harvest photographs and NDVI readings were taken to document complete vegetation
 removal and provide quality control data.
 
-3.2 Laboratory Processing and Quality Control
+3.2
+Laboratory Processing and Quality Control
 
 All samples underwent standardized laboratory processing within 24 hours of collection to minimize degradation and
 ensure accurate measurements. Fresh weight was recorded for each complete sample, followed by manual sorting of a
@@ -235,7 +184,8 @@ measurement errors, and cross-validation between height and biomass measurements
 
 4
 
-3.3 Image Acquisition Systems
+3.3
+Image Acquisition Systems
 
 Photography was conducted using a diverse range of camera systems across varying imaging conditions. The equipment
 used included both consumer-grade and professional-grade devices commonly accessible to researchers and practitioners,
@@ -244,20 +194,19 @@ thereby enhancing the practical applicability and generalizability of the result
 Table 1: Camera systems used for image acquisition
 
 Manufacturer
-Apple
-Canon
-HTC
-NIKON
-OLYMPUS IMAGING CORP. SP510UZ
-Sony
-
-D5833
-
 Models Used
+Apple
 iPhone 4, iPhone 5s
+Canon
 IXUS 125 HS, COOLPIX AW110
+HTC
 0PJA10
+NIKON
 COOLPIX AW110
+OLYMPUS IMAGING CORP.
+SP510UZ
+Sony
+D5833
 
 Images were captured from above the quadrat at varying heights depending on field conditions and equipment
 capabilities, with the primary objective of capturing the complete quadrat area at sufficient resolution for detailed
@@ -265,9 +214,11 @@ vegetation analysis. By employing multiple camera systems and operators, this ap
 resulting models are not dependent on specific camera characteristics and can generalize effectively across different
 imaging equipment and field scenarios.
 
-4 Data Processing and Evaluation
+4
+Data Processing and Evaluation
 
-4.1 Image Normalization
+4.1
+Image Normalization
 
 Raw images required extensive pre-processing due to variations in perspective and camera positioning across diverse
 collection sites and equipment types. To establish consistent regions of interest (ROIs), manual annotation of quadrat
@@ -282,7 +233,8 @@ trapezoidal ROIs into standardized rectangles. Following this, images were resam
 compromise biomass estimation accuracy. Additionally, automatic orientation alignment was implemented to ensure
 consistent image orientation across all samples.
 
-4.2 Data Quality Assurance
+4.2
+Data Quality Assurance
 
 Rigorous quality control measures were implemented to ensure the reliability of the dataset and to exclude samples that
 could negatively impact model training. Photographic verification involved systematic review of pre- and post-harvest
@@ -298,7 +250,8 @@ samples, 1,162 passed the comprehensive quality control process. Exclusions were
 measurement errors or missing data components, and non-representative species composition that did not align with
 target pasture types.
 
-4.3 Biomass Measurement Standards and Data Integration
+4.3
+Biomass Measurement Standards and Data Integration
 
 The final biomass measurements represent dry matter content collected within a standardized 70cm × 30cm quadrat
 frame, enabling precise component-wise quantification critical for detailed pasture analysis. The measurement protocol
@@ -306,7 +259,7 @@ produced five key biomass variables:
 
 5
 
-• Dry_Green_g: Green vegetation other than clover (grams)
+• Dry_Green_g: Green vegetation other than clover (grams)
 
 • Dry_Dead_g: Senescent material (grams)
 
@@ -324,11 +277,11 @@ sample identifiers. The final dataset was formatted as standardized CSV files wi
 to support machine learning model development and ensure reproducibility across research groups and computational
 environments.
 
-4.4 Label Structure
+4.4
+Label Structure
 
 All measurements in the proposed dataset represent dry matter content within the standardized 70cm × 30cm quadrat
-frame, ensuring direct correspondence between image content and ground-truth labels. The training set contains com-
-plete measurements along with auxiliary metadata to support model development and exploratory data analysis. These
+frame, ensuring direct correspondence between image content and ground-truth labels. The training set contains complete measurements along with auxiliary metadata to support model development and exploratory data analysis. These
 auxiliary variables, such as sampling date, location, species composition, NDVI readings, and height measurements are
 available exclusively in the training set and are excluded from the validation and test sets.
 
@@ -340,64 +293,65 @@ or extensive field protocols.
 
 Table 2: Dataset variables and availability across splits
 
-Description
-Path to corresponding image
-Collection date
-Australian state
-Pasture species (by biomass)
-
 Column
-image_path
-Sampling_Date
-State
-Species
-Pre_GSHH_NDVI NDVI from GreenSeeker
-Height_Ave_cm Average height (falling plate)
-Dry_Green_g
-Dry_Dead_g
-Dry_Clover_g
-GDM_g
-Dry_Total_g
-
-Green vegetation other than clover grams
-grams
-Senescent material
-Clover component
-grams
-Green dry matter (Green + Clover) grams
-grams
-Total biomass (all components)
-
+Description
 Unit
-Train Val/Test
-✓
--
-YYYY-MM-DD ✓
-✓
--
-✓
+Train
+Val/Test
+image_path
+Path to corresponding image
 -
 ✓
+✓
+Sampling_Date
+Collection date
+YYYY-MM-DD
+✓
+×
+State
+Australian state
+-
+✓
+×
+Species
+Pasture species (by biomass)
+-
+✓
+×
+Pre_GSHH_NDVI
+NDVI from GreenSeeker
 0-1
 ✓
+×
+Height_Ave_cm
+Average height (falling plate)
 cm
 ✓
-✓
-✓
-✓
-✓
-
 ×
-×
-×
-×
-×
+Dry_Green_g
+Green vegetation other than clover
+grams
 ✓
 ✓
+Dry_Dead_g
+Senescent material
+grams
 ✓
 ✓
+Dry_Clover_g
+Clover component
+grams
 ✓
-
+✓
+GDM_g
+Green dry matter (Green + Clover)
+grams
+✓
+✓
+Dry_Total_g
+Total biomass (all components)
+grams
+✓
 ✓
 
 The five biomass target variables represent the core prediction objectives for machine learning models. Dry_Green_g
@@ -407,49 +361,44 @@ combined green dry matter, representing the most digestible portion of the pastu
 biomass available for livestock consumption. This component-wise breakdown enables nuanced modeling of pasture
 composition beyond simple total biomass estimation.
 
-4.5 Evaluation Protocol
+4.5
+Evaluation Protocol
 
 Model performance is evaluated using weighted R2 scores, designed to reflect the relative importance of different
-biomass components in practical livestock management scenarios. To stabilize variance and improve model evalu-
-ation robustness, particularly for variables with high dynamic range or right-skewed distributions, a log-stabilizing
+biomass components in practical livestock management scenarios. To stabilize variance and improve model evaluation robustness, particularly for variables with high dynamic range or right-skewed distributions, a log-stabilizing
 transformation is applied to all target variables before computing R2 values:
 
 ytrans = log(1 + y)
-
 (1)
 
 6
 
-where y represents the original biomass measurements in grams. This transformation helps normalize the distribution
+where y represents the original biomass measurements in grams. This transformation helps normalize the distribution
 of biomass values and reduces the impact of extreme outliers on model evaluation.
 
 The final evaluation score is computed as a weighted sum of individual R2 values for each transformed target variable:
 
-Final Score =
-
 5
-
-(cid:88)
+X
 
 i=1
-
 wi × R2
-
 i
-
 (2)
 
-where R2
-Dry_Dead_g (0.1), Dry_Clover_g (0.1), GDM_g (0.2), and Dry_Total_g (0.5).
+Final Score =
 
+where R2
 i is calculated using the log-transformed values, and the weights are distributed as follows: Dry_Green_g (0.1),
+Dry_Dead_g (0.1), Dry_Clover_g (0.1), GDM_g (0.2), and Dry_Total_g (0.5).
 
 This weighting scheme prioritizes total biomass prediction as the primary objective, while still maintaining accuracy
 across individual components to support detailed analysis of pasture composition. The log transformation ensures
 that the evaluation metrics are more stable across different scales of biomass measurements and reduces sensitivity to
 extreme values that may occur in natural pasture environments.
 
-5 Discussion
+5
+Discussion
 
 This dataset addresses critical gaps in agricultural computer vision by providing the first large-scale collection of pasture
 images paired with laboratory-validated, component-wise biomass measurements. Unlike existing datasets that rely on
@@ -468,7 +417,8 @@ occlusion in dense canopies, and complex spatial patterns in mixed species sward
 limitations include a geographic focus on Australian temperate systems, an emphasis on six major pasture species, and
 a fixed quadrat size, which may not capture broader landscape-scale patterns.
 
-6 Conclusion
+6
+Conclusion
 
 We present a comprehensive dataset of 1,162 top-view pasture images paired with laboratory-validated biomass
 measurements, representing the first large-scale resource to combine visual, spectral, and structural data for precision
@@ -487,30 +437,23 @@ to improve decision making for the southern livestock industries. Technical Repo
 2012.
 
 [2] Mark Trotter, Derek Schneider, Andrew Robson, et al. Biomass business ii–tools for real time biomass estimation
-
 in pastures. 2018.
 
 [3] Gregory P Asner, Andrew J Elmore, Lydia P Olander, Roberta E Martin, and A Thomas Harris. Grazing systems,
-
 ecosystem responses, and global change. Annu. Rev. Environ. Resour., 29(1):261–299, 2004.
 
 7
 
-[4] Australian Bureau
-
-estimates.
-https://www.abs.gov.au/statistics/environment/environmental-management/national-land-account-experimental-
-estimates/latest-release#land-use, 2024. Accessed: October 28, 2025.
-
-of Statistics.
-
-experimental
-
+[4] Australian
+Bureau
+of
+Statistics.
 National
-
-account
-
 land
+account
+experimental
+estimates.
+https://www.abs.gov.au/statistics/environment/environmental-management/national-land-account-experimentalestimates/latest-release#land-use, 2024. Accessed: October 28, 2025.
 
 [5] C. Edwards, L. H. McCormick, and W. D. Hoffman. Pasture skills audit – a reflection on extension. In APEN
 National Forum: hitting a Moving target Sustaining landscapes, livelihoods and lifestyles in a changing world,
@@ -534,11 +477,9 @@ height. Agronomy Journal, 99:530–536, 2007.
 estimation of pasture biomass in tall fescue (festuca arundinacea var. fletcher). Remote Sensing, 8(2):109, 2016.
 
 [11] C Blore. Estimating pasture biomass with active optical sensors. Advances in Animal Biosciences, 8(2):754–757,
-
 2017.
 
 [12] A Edirisinghe, MJ Hill, GE Donald, and M Hyder. Quantitative mapping of pasture biomass using satellite
-
 imagery. International Journal of Remote Sensing, 32(10):2699–2724, 2011.
 
 [13] Søren Skovsen, Mads Dyrmann, Jørgen Eriksen, René Gislum, Henrik Karstoft, and Rasmus {Nyholm Jørgensen}.
@@ -583,9 +524,7 @@ Khachatrian, Hovnatan Karapetyan, Ivan Dozier, Greg Rose, et al. Agriculture-vis
 
 8
 
-database for agricultural pattern analysis. In Proceedings of the IEEE/CVF Conference on Computer Vision and
+database for agricultural pattern analysis. In Proceedings of the IEEE/CVF Conference on Computer Vision and
 Pattern Recognition, pages 2828–2838, 2020.
 
 9
-
-

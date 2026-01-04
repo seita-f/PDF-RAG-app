@@ -1,28 +1,71 @@
 import os
+import re
 import unicodedata
 
-from pdfminer.high_level import extract_text
-from pdfminer.layout import LAParams
+import fitz
+
+# PDFMiner
+# def extract_text_from_pdf(pdf_file):
+#     try:
+#         laparams = LAParams(
+#             all_texts=True,
+#             char_margin=3.0,
+#             line_margin=0.2,
+#             word_margin=0.1,
+#             boxes_flow=0.5,
+#         )  # all_texts: include text in graph, table etc
+
+#         text = extract_text(pdf_file, laparams=laparams)
+#         text = text_cleaning(text)
+
+#         return text
+
+#     except Exception as e:
+#         print(f"Error occurred: {e}")
+#         return None
 
 
+# PyMuPDF
 def extract_text_from_pdf(pdf_file):
     try:
-        laparams = LAParams(
-            all_texts=True,
-            char_margin=3.0,
-            line_margin=0.2,
-            word_margin=0.1,
-            boxes_flow=0.5,
-        )  # all_texts: include text in graph, table etc
+        if isinstance(pdf_file, str):
+            doc = fitz.open(pdf_file)
+        else:
+            doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
 
-        text = extract_text(pdf_file, laparams=laparams)
-        text = unicodedata.normalize("NFKC", text)
+        full_text = []
 
-        return text
+        for page in doc:
+            # block mode
+            blocks = page.get_text("blocks")
+
+            # sort block（up to down, left to right)
+            blocks.sort(key=lambda b: (b[1], b[0]))
+
+            for block in blocks:
+                block_text = block[4].strip()
+                if block_text:
+                    full_text.append(block_text)
+
+        # add two line break between blocks
+        text = "\n\n".join(full_text)
+
+        # text cleaning
+        text = text_cleaning(text)
+
+        return text.strip()
 
     except Exception as e:
-        print(f"Error occurred: {e}")
+        print(f"Error occurred in PyMuPDF: {e}")
         return None
+
+
+def text_cleaning(text):
+    # "assess-\nment" -> "assessment"
+    text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
+    text = unicodedata.normalize("NFKC", text)
+
+    return text
 
 
 def debug_save_pdf_in_text(uploaded_file, extracted_text, text_dir):
