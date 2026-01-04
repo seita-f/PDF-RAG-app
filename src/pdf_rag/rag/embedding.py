@@ -13,6 +13,9 @@ def embedding_data(
     )
     chunks = text_splitter.split_text(extracted_text)
 
+    #  DEBUG
+    debug_visualize_chunk(chunks, 5)
+
     embeddings = OpenAIEmbeddings(model=model)
 
     db = Chroma.from_texts(
@@ -23,6 +26,14 @@ def embedding_data(
     )
 
     return db
+
+
+def debug_visualize_chunk(chunks, size):
+    print(f"Total chunks: {len(chunks)}")
+    for i in range(size):
+        print(f"--- Chunk {i} ---")
+        print(chunks[i])
+        print("-" * 20)
 
 
 def search_similar_documents(query, k, model, embedding_db):
