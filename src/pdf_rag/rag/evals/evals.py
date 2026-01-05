@@ -29,6 +29,14 @@ EMBEDDING_OVERLAP = config["embedding"]["overlap"]
 EMBEDDING_CHUNK_SIZE = config["embedding"]["chunk_size"]
 EMBEDDING_DB_DIR = config["embedding"]["db_dir"]
 
+# RETRIEVER
+RETRIEVER_TYPE = config["retriever"]["type"]
+RETRIEVER_VECTOR = config["retriever"]["vector"]["search_type"]
+RETRIEVER_VECTOR_K = config["retriever"]["vector"]["k"]
+RETRIEVER_BM25_K = config["retriever"]["bm25"]["k"]
+RETRIEVER_BM25_W = config["retriever"]["hybrid"]["bm25_weight"]
+RETRIEVER_VECTOR_W = config["retriever"]["hybrid"]["vector_weight"]
+
 # LLM
 LLM_MODEL = config["llm"]["model"]
 LLM_TEMPERATURE = config["llm"]["temperature"]
@@ -40,6 +48,7 @@ LLM_PROMPT = config["llm"]["prompt"]
 EVAL_LLM_MODEL = config["eval"]["llm"]["model"]
 EVAL_LLM_TEMPERATURE = config["eval"]["llm"]["temperature"]
 EVAL_LOGS_DIR = Path(config["eval"]["log_dir"])
+
 
 # Setup LLM
 async_client = AsyncOpenAI()
@@ -58,11 +67,18 @@ def save_evaluation_report(results, mode):
 
     summary_results_str = str(results)
 
-    # details for each data's evaluation
-    # df_details = results.to_pandas()
+    ret_type = RETRIEVER_TYPE
+    retriever_details = f"- Type: {ret_type}\n"
 
-    # Average Score
-    # numeric_scores = df_details.select_dtypes(include=['number']).mean().to_dict()
+    if ret_type == "vector":
+        retriever_details += f"  - Search Type: {RETRIEVER_VECTOR}\n"
+        retriever_details += f"  - K: {RETRIEVER_VECTOR_K}"
+    elif ret_type == "bm25":
+        retriever_details += f"  - K: {RETRIEVER_BM25_K}"
+    elif ret_type == "hybrid":
+        retriever_details += f"  - BM25 Weight: {RETRIEVER_BM25_W}\n"
+        retriever_details += f"  - Vector Weight: {RETRIEVER_VECTOR_W}\n"
+        retriever_details += f"  - Vector Search Type: {RETRIEVER_VECTOR}"
 
     # Report
     summary_text = f"""
@@ -73,6 +89,9 @@ Run Time:    {timestamp}
 --------------------------------------------------
 [METRICS SUMMARY]
 {summary_results_str}
+
+[Retriever]
+{retriever_details}
 
 [HYPERPARAMETERS - Embedding]
 - Embed Model:  {EMBEDDING_MODEL}
@@ -96,7 +115,7 @@ Run Time:    {timestamp}
     print(f"✅ Report successfully saved at: {file_path}")
 
 
-def run_evaluation(mode):
+def run_evaluation(mode, config):
     df_golden = pd.read_json(config["eval"]["golden_dataset"])
 
     questions = df_golden["question"].tolist()
@@ -122,7 +141,7 @@ def run_evaluation(mode):
     print(f"Generating answers for {len(questions)} queries...")
     for i, q in enumerate(questions):
         relevant_docs = search_similar_documents(
-            q, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR
+            q, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR, config
         )
         if mode == "retrieval":
             ans = ground_truths[i]  # Not calling LLM
@@ -168,7 +187,7 @@ def main():
     )
     args = parser.parse_args()
 
-    results = run_evaluation(args.mode)
+    results = run_evaluation(args.mode, config)
     save_evaluation_report(results, args.mode)
 
 
