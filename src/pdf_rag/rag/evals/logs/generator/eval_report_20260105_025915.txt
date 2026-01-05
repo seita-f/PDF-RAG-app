@@ -1,0 +1,31 @@
+
+==================================================
+RAG EVALUATION REPORT
+==================================================
+Run Time:    20260105_025915
+--------------------------------------------------
+[METRICS SUMMARY]
+{'faithfulness': 0.8000, 'answer_relevancy': 0.8063}
+
+[HYPERPARAMETERS - Embedding]
+- Embed Model:  text-embedding-3-small
+- Overlap:      200
+- Chunk Size:   1024
+
+[HYPERPARAMETERS - LLM]
+- Model:        gpt-4o-mini
+- Temperature   0
+- Max Token     1024
+- Top K         5
+- Prompt        You are a professional assistant. Answer the user's question using ONLY the following context provided.
+If the answer is not contained within the context, respond with "I am sorry, but I could not find the information in the provided documents.
+
+Context:
+{context}
+
+Question: 
+{question}
+
+Answer:
+
+==================================================

@@ -1,10 +1,12 @@
 import argparse
+import os
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import yaml
 from datasets import Dataset
+from langchain_core.tracers.context import LangChainTracer
 from langchain_openai import OpenAIEmbeddings
 from openai import AsyncOpenAI
 from ragas import evaluate
@@ -142,9 +144,13 @@ def run_evaluation(mode):
     }
     dataset = Dataset.from_dict(data)
 
+    tracer = LangChainTracer(project_name=os.getenv("LANGCHAIN_PROJECT"))
+
     print("Evaluating metrics...")
     run_config = RunConfig(max_workers=1, timeout=60)
-    results = evaluate(dataset=dataset, metrics=metrics, run_config=run_config)
+    results = evaluate(
+        dataset=dataset, metrics=metrics, run_config=run_config, callbacks=[tracer]
+    )
 
     print(results)
 

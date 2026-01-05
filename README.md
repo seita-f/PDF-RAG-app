@@ -17,9 +17,14 @@
 </p>
 
 # How to Start
-Create a `.env` file in the root directory and add your OpenAI API key
+Create a `.env` file in the root directory and add your OpenAI API key and LangSmith API
 ```
 OPENAI_API_KEY=sk-proj-xxxxxxxxxxxx
+
+LANGCHAIN_TRACING_V2=true
+LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+LANGCHAIN_API_KEY=xxxxxxxxxxxxxxxxxxx
+LANGCHAIN_PROJECCT=<any name>
 ```
 Build and run the application using Docker
 ```
