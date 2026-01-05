@@ -32,6 +32,7 @@ LLM_MAX_TOKEN = config["llm"]["max_tokens"]
 
 st.set_page_config(layout="wide")
 st.title("📄 PDF RAG Assistant")
+st.caption(f"Current Engine: {config['retriever']['type']} | Model: {LLM_MODEL}")
 
 # Sider bar
 with st.sidebar:
@@ -39,17 +40,16 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     if uploaded_file:
         save_pdf(uploaded_file, PDF_DOC_DIR)
-        extracted_text = extract_text_from_pdf(uploaded_file)
+        docs = extract_text_from_pdf(uploaded_file)
 
-        if extracted_text:
+        if docs:
             st.success(f"Extracted text from {uploaded_file.name}")
 
             # DEBUG:
-            debug_save_pdf_in_text(uploaded_file, extracted_text, PDF_TEXTS_DIR)
+            debug_save_pdf_in_text(uploaded_file, docs, PDF_TEXTS_DIR)
 
             db = embedding_data(
-                extracted_text,
-                uploaded_file.name,
+                docs,
                 EMBEDDING_CHUNK_SIZE,
                 EMBEDDING_OVERLAP,
                 EMBEDDING_MODEL,
@@ -75,7 +75,7 @@ if submit_button and user_input:
     # rag
     with st.spinner("Searching and Generating..."):
         search_results = search_similar_documents(
-            user_input, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR
+            user_input, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR, config
         )
         ans = generate_answer(
             user_input,
@@ -95,6 +95,10 @@ if submit_button and user_input:
         st.write(f"### References ({len(search_results)} results found)")
 
         for i, (doc, score) in enumerate(search_results):
+            source = doc.metadata.get("source", "Unknown File")
+            page = doc.metadata.get("page", "-")
+            expander_title = f"#{i + 1} | {source} (Page: {page})"
+
             c1, c2, c3 = st.columns([0.4, 3, 0.6])
 
             with c1:
@@ -102,7 +106,8 @@ if submit_button and user_input:
 
             with c2:
                 st.markdown(
-                    f"**{doc.metadata.get('source', 'Unknown')}** (p.{doc.metadata.get('page', 1)})"
+                    f"**{source}** <code style='color: #666; background: #f0f2f6; padding: 2px 6px; border-radius: 4px; font-size: 0.8em;'>p.{page}</code>",
+                    unsafe_allow_html=True,
                 )
                 st.caption(doc.page_content)
 

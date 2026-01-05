@@ -10,6 +10,20 @@ embedding:
   overlap: 200
   db_dir: data/chroma_db 
 
+# Retriever
+retriever:
+  type: hybrid       # bm25 | vector | hybrid
+  bm25:
+    k: 5            # number of documents to retrieve
+    tokenizer: default 
+    lowercase: true
+  vector:
+    k: 5
+    search_type: similarity   # similarity | mmr
+  hybrid:
+    bm25_weight: 0.3
+    vector_weight: 0.7
+
 # LLM settings for RAG
 llm:
   model: gpt-4o-mini  
