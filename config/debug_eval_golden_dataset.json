@@ -1,6 +1,7 @@
 [
   {
     "question": "What is the role and importance of the 'Dry_Clover_g' component in pasture modeling?",
-    "ground_truth": "Dry_Clover_g captures the nitrogen-fixing clover component, which is essential for maintaining pasture nutrition."
+    "ground_truth": "Dry_Clover_g captures the nitrogen-fixing clover component, which is essential for maintaining pasture nutrition.",
+    "context_answer": "Dry_Clover_g represents the dry-matter clover (legume) fraction. Clover is modeled separately because it is nutritionally important and contributes via nitrogen fixation, influencing pasture productivity and composition."
   }
 ]
