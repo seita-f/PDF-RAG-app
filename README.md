@@ -55,12 +55,12 @@ More Details can be viewed in **LangSmith** Dashboard. <br>
 | --- | --- |
 | LLM Model | gpt-4 |
 | Temperature | 0 |
-<br>
+
 ### 2 Ex: Retrieval Evaluation
 | Embedding Model | Chunk Size | Overlap | Context Precision | Context Recall |
 | --- | --- | --- | --- | --- | 
 | text-embedding-3-small | 1024 | 200 | 0.8000 | 0.7333 |
-<br>
+
 ### 3. Ex: Generator Evaluation
 
 | Embedding Model | Chunk Size | Overlap |
@@ -70,7 +70,7 @@ More Details can be viewed in **LangSmith** Dashboard. <br>
 | LLM Model | Temperature | Top K | Max Tokens | Faithfulness | Answer Relevancy |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
-<br><br>
+
 LangSmith Dashboard
 <img
   src="https://github.com/user-attachments/assets/2dd3954b-8a8e-4759-9cab-623462fa6b1a"
