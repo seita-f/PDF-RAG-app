@@ -71,8 +71,11 @@ More Details can be viewed in **LangSmith** Dashboard. <br>
 | LLM Model | Temperature | Top K | Max Tokens | Faithfulness | Answer Relevancy |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
-
-<img width="1440" height="818" alt="langsmith" src="https://github.com/user-attachments/assets/2dd3954b-8a8e-4759-9cab-623462fa6b1a" />
-
-
+<br>
+<img
+  src="https://github.com/user-attachments/assets/2dd3954b-8a8e-4759-9cab-623462fa6b1a"
+  alt="langsmith"
+  width="900"
+  style="border: 2px solid black;"
+/>
 
