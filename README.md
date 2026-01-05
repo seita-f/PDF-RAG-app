@@ -57,9 +57,12 @@ More Details can be viewed in **LangSmith** Dashboard. <br>
 | Temperature | 0 |
 
 ### 2 Ex: Retrieval Evaluation
-| Embedding Model | Chunk Size | Overlap | Context Precision | Context Recall |
-| --- | --- | --- | --- | --- | 
-| text-embedding-3-small | 1024 | 200 | 0.8000 | 0.7333 |
+| Embedding Model        | Chunk Size | Overlap | Retriever           | Context Precision | Context Recall |
+| ---------------------- | ---------- | ------- | ------------------- | ----------------- | -------------- |
+| text-embedding-3-small | 1024       | 200     | Vector (similarity) | 0.7533            | 0.8500         |
+| text-embedding-3-small | 1024       | 200     | BM25                | 0.4650            | 0.7000         |
+| text-embedding-3-small | 1024       | 200     | Hybrid (0.3 / 0.7)  | 0.7000            | 0.9000         |
+
 
 ### 3. Ex: Generator Evaluation
 
