@@ -48,6 +48,7 @@ Adjust the parameters in [`config/config.yaml`](https://github.com/seita-f/PDF-R
 
 # Evaluate
 Briefly evaluated RAG system based on the **RAGAS** results. <br>
+More Details can be viewed in **LangSmith** Dashboard. <br>
 ### 1. Configuration
 [golden dataset](https://github.com/seita-f/PDF-RAG-app/blob/main/config/eval_golden_dataset.json)
 | Configuration Item | Value |
@@ -71,6 +72,7 @@ Briefly evaluated RAG system based on the **RAGAS** results. <br>
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
 
+<img width="1440" height="818" alt="langsmith" src="https://github.com/user-attachments/assets/2dd3954b-8a8e-4759-9cab-623462fa6b1a" />
 
 
 
