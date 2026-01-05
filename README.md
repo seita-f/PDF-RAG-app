@@ -71,7 +71,7 @@ More Details can be viewed in **LangSmith** Dashboard. <br>
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
 
-LangSmith Dashboard
+#### 4. Ex: LangSmith Dashboard
 <img
   src="https://github.com/user-attachments/assets/2dd3954b-8a8e-4759-9cab-623462fa6b1a"
   alt="langsmith"
