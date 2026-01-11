@@ -11,10 +11,10 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 from ragas.llms import llm_factory
 from ragas.metrics import AnswerRelevancy, ContextPrecision, ContextRecall, Faithfulness
 from ragas.run_config import RunConfig
-from src.pdf_rag.utils.config import settings
 
 from src.pdf_rag.rag.embedding import search_similar_documents
 from src.pdf_rag.rag.generate import generate_answer
+from src.pdf_rag.utils.config import settings
 
 # Setup LLM
 async_client = AsyncOpenAI()
@@ -157,6 +157,7 @@ def main():
     # Evaluation
     results = run_evaluation(args.mode)
 
+    print(results)
     # Replaced to MLFlow
     # save_evaluation_report(results, args.mode)
 
