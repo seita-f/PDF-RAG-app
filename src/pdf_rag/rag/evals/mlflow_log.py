@@ -53,7 +53,7 @@ def log_metrics_and_details(mode: str, results, details_df):
     mlflow.log_metrics(scores)
 
     # save in artifact
-    out_dir = Path("mlflow/artifacts")
+    out_dir = Path("mlflow_data/artifacts")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     csv_path = out_dir / f"eval_details_{mode}.csv"
