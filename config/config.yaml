@@ -48,7 +48,7 @@ eval:
   llm:
     model: gpt-4o   # higher performance model
     temperature: 0
-  golden_dataset: config/eval_golden_dataset.json  # config/debug_eval_golden_dataset.json is just for one query
+  golden_dataset: config/debug_eval_golden_dataset.json  # config/debug_eval_golden_dataset.json is just for one query
   log_dir: src/pdf_rag/rag/evals/logs
   result_dir: src/pdf_rag/rag/evals/result  # visualize comparisons of experiments
 

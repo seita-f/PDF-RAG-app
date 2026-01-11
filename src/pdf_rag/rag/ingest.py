@@ -5,6 +5,8 @@ import unicodedata
 import fitz
 from langchain_core.documents import Document
 
+from src.pdf_rag.utils.config import settings
+
 
 # PyMuPDF
 def extract_text_from_pdf(pdf_file):
@@ -42,7 +44,9 @@ def _text_cleaning(text):
     return text
 
 
-def debug_save_pdf_in_text(uploaded_file, extracted_docs, text_dir):
+def debug_save_pdf_in_text(
+    uploaded_file, extracted_docs, text_dir=settings.PDF_TEXTS_DIR
+):
     save_path = text_dir
     os.makedirs(save_path, exist_ok=True)
 
@@ -58,7 +62,7 @@ def debug_save_pdf_in_text(uploaded_file, extracted_docs, text_dir):
             file.write(extracted_docs)
 
 
-def save_pdf(uploaded_file, doc_dir):
+def save_pdf(uploaded_file, doc_dir=settings.PDF_DOC_DIR):
     save_path = doc_dir
     os.makedirs(save_path, exist_ok=True)
 
@@ -78,5 +82,5 @@ def main():
 
 if __name__ == "__main__":
     main()
-    main()
+if __name__ == "__main__":
     main()

@@ -1,10 +1,16 @@
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+from src.pdf_rag.utils.config import settings
 
 
 def generate_answer(
-    query: str, relevant_docs, model, temperature, prompt_template, max_tokens
+    query: str,
+    relevant_docs,
+    model=settings.LLM_MODEL,
+    temperature=settings.LLM_TEMPERATURE,
+    prompt_template=settings.LLM_PROMPT,
+    max_tokens=settings.LLM_MAX_TOKEN,
 ):
     llm = ChatOpenAI(model=model, temperature=temperature, max_tokens=max_tokens)
     prompt = ChatPromptTemplate.from_template(prompt_template)
