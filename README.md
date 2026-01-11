@@ -10,6 +10,7 @@
   <!-- Libraries -->
   <img src="https://img.shields.io/badge/-Streamlit-FF4B4B.svg?logo=streamlit&logoColor=white&style=for-the-badge">
   <img src="https://img.shields.io/badge/-LangChain-1C3C3C.svg?logo=langchain&logoColor=white&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-MLflow-0194E2.svg?logo=mlflow&logoColor=white&style=for-the-badge">
   <!-- <img src="https://img.shields.io/badge/-Hugging%20Face-FFD21E.svg?logo=huggingface&logoColor=black&style=for-the-badge"> -->
   <!-- インフラ一覧 -->
   <img src="https://img.shields.io/badge/-Docker-1488C6.svg?logo=docker&style=for-the-badge">
@@ -19,13 +20,13 @@
 # How to Start
 Create a `.env` file in the root directory and add your OpenAI API key and LangSmith API
 ```
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxx
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxx　　 # add 
 
 LANGCHAIN_TRACING_V2=true
 LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-LANGCHAIN_API_KEY=xxxxxxxxxxxxxxxxxxx
-LANGCHAIN_PROJECCT=<any name>
-```
+LANGCHAIN_API_KEY=xxxxxxxxxxxxxxxxxxx  # add
+LANGCHAIN_PROJECCT=<any name>          # add
+``` 
 Build and run the application using Docker
 ```
 docker compose build
@@ -48,7 +49,7 @@ Adjust the parameters in [`config/config.yaml`](https://github.com/seita-f/PDF-R
 
 # Evaluate
 Briefly evaluated RAG system based on the **RAGAS** results. <br>
-More Details can be viewed in **LangSmith** Dashboard. <br>
+More Details can be viewed in **LangSmith** Dashboard or **MLFlow** Dashboard. <br>
 ### 1. Configuration
 [golden dataset](https://github.com/seita-f/PDF-RAG-app/blob/main/config/eval_golden_dataset.json)
 | Configuration Item | Value |
@@ -74,11 +75,16 @@ More Details can be viewed in **LangSmith** Dashboard. <br>
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | gpt-4o-mini | 0 | 5 | 1024 | 0.9600 | 0.7738 |
 
-### 4. Ex: LangSmith Dashboard
-<img
-  src="https://github.com/user-attachments/assets/2dd3954b-8a8e-4759-9cab-623462fa6b1a"
-  alt="langsmith"
-  width="900"
-  style="border: 2px solid black;"
-/>
+### LangSmith
+- [X] Trace
+- [X] Monitor
+- [ ] Database & Experiments
+- [ ] Prompt Playground 
+
+### MLFlow
+- [X] Tracing
+- [X] Artifact
+- [X] Model Metrics / Params
+- [ ] Prompt Playground
+
 
