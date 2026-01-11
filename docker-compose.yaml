@@ -15,6 +15,7 @@ services:
       VECTORDB_DIR: /app/data/chroma_db
       UPLOAD_DIR: /app/data/uploads
       CHOKIDAR_USEPOLLING: true  # reflect update
+      GIT_PYTHON_REFRESH: quiet  # mlflow: disable mapping witn git version
     volumes:
       - .:/app
       - /app/.venv
@@ -22,8 +23,10 @@ services:
 
   mlflow:
     image: ghcr.io/mlflow/mlflow
+    container_name: mlflow
     ports:
       - "5000:5000"
     volumes:
-      - ./mlruns:/app/mlruns
+      - ./mlflow_data/mlruns:/app/mlruns
+      - ./mlflow_data/artifacts:/app/artifacts
     command: mlflow ui --host 0.0.0.0 --port 5000 --allowed-hosts "*" --dev

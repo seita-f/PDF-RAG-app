@@ -1,9 +1,12 @@
+import mlflow
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+
 from src.pdf_rag.utils.config import settings
 
 
+@mlflow.trace(name="RAG_Generation_Step")
 def generate_answer(
     query: str,
     relevant_docs,
