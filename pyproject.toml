@@ -17,6 +17,7 @@ dependencies = [
   "rank-bm25>=0.2.2",
   "langchain-community>=0.4.1",
   "langchain-classic>=1.0.1",
+  "mlflow>=3.8.1",
 ]
 
 [dependency-groups]

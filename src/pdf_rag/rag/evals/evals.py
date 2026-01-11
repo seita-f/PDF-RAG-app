@@ -1,10 +1,7 @@
 import argparse
 import os
-from datetime import datetime
-from pathlib import Path
 
 import pandas as pd
-import yaml
 from datasets import Dataset
 from langchain_core.tracers.context import LangChainTracer
 from langchain_openai import OpenAIEmbeddings
@@ -17,106 +14,75 @@ from ragas.run_config import RunConfig
 
 from src.pdf_rag.rag.embedding import search_similar_documents
 from src.pdf_rag.rag.generate import generate_answer
-
-# load config
-with open("config/config.yaml") as file:
-    config = yaml.safe_load(file.read())
-
-
-# EMBEDDING
-EMBEDDING_MODEL = config["embedding"]["model"]
-EMBEDDING_OVERLAP = config["embedding"]["overlap"]
-EMBEDDING_CHUNK_SIZE = config["embedding"]["chunk_size"]
-EMBEDDING_DB_DIR = config["embedding"]["db_dir"]
-
-# RETRIEVER
-RETRIEVER_TYPE = config["retriever"]["type"]
-RETRIEVER_VECTOR = config["retriever"]["vector"]["search_type"]
-RETRIEVER_VECTOR_K = config["retriever"]["vector"]["k"]
-RETRIEVER_BM25_K = config["retriever"]["bm25"]["k"]
-RETRIEVER_BM25_W = config["retriever"]["hybrid"]["bm25_weight"]
-RETRIEVER_VECTOR_W = config["retriever"]["hybrid"]["vector_weight"]
-
-# LLM
-LLM_MODEL = config["llm"]["model"]
-LLM_TEMPERATURE = config["llm"]["temperature"]
-LLM_MAX_TOKEN = config["llm"]["max_tokens"]
-LLM_TOP_K = config["llm"]["k"]
-LLM_PROMPT = config["llm"]["prompt"]
-
-# EVAL
-EVAL_LLM_MODEL = config["eval"]["llm"]["model"]
-EVAL_LLM_TEMPERATURE = config["eval"]["llm"]["temperature"]
-EVAL_LOGS_DIR = Path(config["eval"]["log_dir"])
-
+from src.pdf_rag.utils.config import settings
 
 # Setup LLM
 async_client = AsyncOpenAI()
-evaluator_llm = llm_factory(model=EVAL_LLM_MODEL, client=async_client)
+evaluator_llm = llm_factory(model=settings.EVAL_LLM_MODEL, client=async_client)
 evaluator_embeddings = LangchainEmbeddingsWrapper(
-    OpenAIEmbeddings(model=EMBEDDING_MODEL)
+    OpenAIEmbeddings(model=settings.EMBEDDING_MODEL)
 )
 
 
-def save_evaluation_report(results, mode):
-    save_path_dir = EVAL_LOGS_DIR / mode
-    save_path_dir.mkdir(parents=True, exist_ok=True)
+# def save_evaluation_report(results, mode):
+#     save_path_dir = EVAL_LOGS_DIR / mode
+#     save_path_dir.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_path = save_path_dir / f"eval_report_{timestamp}.txt"
+#     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+#     file_path = save_path_dir / f"eval_report_{timestamp}.txt"
 
-    summary_results_str = str(results)
+#     summary_results_str = str(results)
 
-    ret_type = RETRIEVER_TYPE
-    retriever_details = f"- Type: {ret_type}\n"
+#     ret_type = RETRIEVER_TYPE
+#     retriever_details = f"- Type: {ret_type}\n"
 
-    if ret_type == "vector":
-        retriever_details += f"  - Search Type: {RETRIEVER_VECTOR}\n"
-        retriever_details += f"  - K: {RETRIEVER_VECTOR_K}"
-    elif ret_type == "bm25":
-        retriever_details += f"  - K: {RETRIEVER_BM25_K}"
-    elif ret_type == "hybrid":
-        retriever_details += f"  - BM25 Weight: {RETRIEVER_BM25_W}\n"
-        retriever_details += f"  - Vector Weight: {RETRIEVER_VECTOR_W}\n"
-        retriever_details += f"  - Vector Search Type: {RETRIEVER_VECTOR}"
+#     if ret_type == "vector":
+#         retriever_details += f"  - Search Type: {RETRIEVER_VECTOR}\n"
+#         retriever_details += f"  - K: {RETRIEVER_VECTOR_K}"
+#     elif ret_type == "bm25":
+#         retriever_details += f"  - K: {RETRIEVER_BM25_K}"
+#     elif ret_type == "hybrid":
+#         retriever_details += f"  - BM25 Weight: {RETRIEVER_BM25_W}\n"
+#         retriever_details += f"  - Vector Weight: {RETRIEVER_VECTOR_W}\n"
+#         retriever_details += f"  - Vector Search Type: {RETRIEVER_VECTOR}"
 
-    # Report
-    summary_text = f"""
-==================================================
-RAG EVALUATION REPORT
-==================================================
-Run Time:    {timestamp}
---------------------------------------------------
-[METRICS SUMMARY]
-{summary_results_str}
+#     # Report
+#     summary_text = f"""
+# ==================================================
+# RAG EVALUATION REPORT
+# ==================================================
+# Run Time:    {timestamp}
+# --------------------------------------------------
+# [METRICS SUMMARY]
+# {summary_results_str}
 
-[Retriever]
-{retriever_details}
+# [Retriever]
+# {retriever_details}
 
-[HYPERPARAMETERS - Embedding]
-- Embed Model:  {EMBEDDING_MODEL}
-- Overlap:      {EMBEDDING_OVERLAP}
-- Chunk Size:   {EMBEDDING_CHUNK_SIZE}
+# [HYPERPARAMETERS - Embedding]
+# - Embed Model:  {EMBEDDING_MODEL}
+# - Overlap:      {EMBEDDING_OVERLAP}
+# - Chunk Size:   {EMBEDDING_CHUNK_SIZE}
 
-[HYPERPARAMETERS - LLM]
-- Model:        {LLM_MODEL}
-- Temperature   {LLM_TEMPERATURE}
-- Max Token     {LLM_MAX_TOKEN}
-- Top K         {LLM_TOP_K}
-- Prompt        {LLM_PROMPT}
-==================================================
-"""
+# [HYPERPARAMETERS - LLM]
+# - Model:        {LLM_MODEL}
+# - Temperature   {LLM_TEMPERATURE}
+# - Max Token     {LLM_MAX_TOKEN}
+# - Top K         {LLM_TOP_K}
+# - Prompt        {LLM_PROMPT}
+# ==================================================
+# """
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(summary_text)
-        # f.write("\n[DETAILED LOGS PER QUERY]\n")
-        # f.write(df_details.to_string(index=False))
+#     with open(file_path, "w", encoding="utf-8") as f:
+#         f.write(summary_text)
+#         # f.write("\n[DETAILED LOGS PER QUERY]\n")
+#         # f.write(df_details.to_string(index=False))
 
-    print(f"✅ Report successfully saved at: {file_path}")
+#     print(f"Report successfully saved at: {file_path}")
 
 
-def run_evaluation(mode, config):
-    df_golden = pd.read_json(config["eval"]["golden_dataset"])
+def run_evaluation(mode):
+    df_golden = pd.read_json(settings.EVAL_GOLDEN_DATASET)
 
     questions = df_golden["question"].tolist()
     ground_truths = df_golden["ground_truth"].tolist()
@@ -139,15 +105,16 @@ def run_evaluation(mode, config):
         print(f"--- Mode: {mode} (Evaluating Generation Quality) ---")
 
     print(f"Generating answers for {len(questions)} queries...")
-    for i, q in enumerate(questions):
+    for i, query in enumerate(questions):
         relevant_docs = search_similar_documents(
-            q, LLM_TOP_K, EMBEDDING_MODEL, EMBEDDING_DB_DIR, config
+            query,
         )
         if mode == "retrieval":
             ans = ground_truths[i]  # Not calling LLM
         else:
             ans = generate_answer(
-                q, relevant_docs, LLM_MODEL, LLM_TEMPERATURE, LLM_PROMPT, LLM_MAX_TOKEN
+                query,
+                relevant_docs,
             )
 
         answers.append(ans)
@@ -187,8 +154,15 @@ def main():
     )
     args = parser.parse_args()
 
-    results = run_evaluation(args.mode, config)
-    save_evaluation_report(results, args.mode)
+    # Evaluation
+    results = run_evaluation(args.mode)
+
+    print(results)
+    # Replaced to MLFlow
+    # save_evaluation_report(results, args.mode)
+
+    # MLFlow
+    # mlflow_logging(args.mode, results)
 
 
 if __name__ == "__main__":

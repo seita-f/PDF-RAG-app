@@ -5,8 +5,16 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from src.pdf_rag.utils.config import settings
 
-def embedding_data(documents, chunk_size, chunk_overlap, model, embedding_db):
+
+def embedding_data(
+    documents,
+    chunk_size=settings.EMBEDDING_CHUNK_SIZE,
+    chunk_overlap=settings.EMBEDDING_OVERLAP,
+    model=settings.EMBEDDING_MODEL,
+    embedding_db=settings.EMBEDDING_DB_DIR,
+):
     text_splitter = RecursiveCharacterTextSplitter(
         # separator='\n\n',  # split by two line breaks
         chunk_size=chunk_size,
@@ -36,12 +44,12 @@ def _debug_visualize_chunk(docs, size):
         print("-" * 20)
 
 
-def _get_retriever(db, k, config):
-    ret_type = config["retriever"]["type"]
+def _get_retriever(db, k=settings.RET_VECTOR_K):
+    ret_type = settings.RET_TYPE
 
     # Vector
     vector_ret = db.as_retriever(
-        search_type=config["retriever"]["vector"]["search_type"], search_kwargs={"k": k}
+        search_type=settings.RET_VECTOR_SEARCH_TYPE, search_kwargs={"k": k}
     )
 
     if ret_type == "vector":
@@ -55,7 +63,7 @@ def _get_retriever(db, k, config):
 
     # BM25 Retriever
     bm25_ret = BM25Retriever.from_documents(all_docs)
-    bm25_ret.k = config["retriever"]["bm25"]["k"]
+    bm25_ret.k = settings.RET_BM25_K
 
     if ret_type == "bm25":
         return bm25_ret
@@ -64,19 +72,24 @@ def _get_retriever(db, k, config):
         return EnsembleRetriever(
             retrievers=[bm25_ret, vector_ret],
             weights=[
-                config["retriever"]["hybrid"]["bm25_weight"],
-                config["retriever"]["hybrid"]["vector_weight"],
+                settings.RET_BM25_W,
+                settings.RET_VECTOR_W,
             ],
         )
 
     return vector_ret
 
 
-def search_similar_documents(query, k, model, embedding_db, config):
+def search_similar_documents(
+    query,
+    k=settings.RET_VECTOR_K,
+    model=settings.EMBEDDING_MODEL,
+    embedding_db=settings.EMBEDDING_DB_DIR,
+):
     embeddings = OpenAIEmbeddings(model=model)
     db = Chroma(persist_directory=embedding_db, embedding_function=embeddings)
 
-    retriever = _get_retriever(db, k, config)
+    retriever = _get_retriever(db, k)
     docs = retriever.invoke(query)
 
     return [(doc, 1.0) for doc in docs[:k]]
@@ -89,4 +102,3 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
