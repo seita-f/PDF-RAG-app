@@ -6,7 +6,7 @@ pdf:
 # Embedding settings
 embedding:
   model: text-embedding-3-small  # openAI light model
-  chunk_size: 1024
+  chunk_size: 1024 
   overlap: 200
   db_dir: data/chroma_db 
 
@@ -21,8 +21,8 @@ retriever:
     k: 5
     search_type: similarity   # similarity | mmr
   hybrid:
-    bm25_weight: 0.3
-    vector_weight: 0.7
+    bm25_weight: 0.2
+    vector_weight: 0.8
 
 # LLM settings for RAG
 llm:
@@ -48,7 +48,7 @@ eval:
   llm:
     model: gpt-4o   # higher performance model
     temperature: 0
-  golden_dataset: config/debug_eval_golden_dataset.json  # config/debug_eval_golden_dataset.json is just for one query
+  golden_dataset: config/eval_golden_dataset.json  # config/debug_eval_golden_dataset.json is just for one query
   log_dir: src/pdf_rag/rag/evals/logs
   result_dir: src/pdf_rag/rag/evals/result  # visualize comparisons of experiments
 

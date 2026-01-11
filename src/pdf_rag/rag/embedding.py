@@ -5,6 +5,7 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+import mlflow
 from src.pdf_rag.utils.config import settings
 
 
@@ -16,7 +17,7 @@ def embedding_data(
     embedding_db=settings.EMBEDDING_DB_DIR,
 ):
     text_splitter = RecursiveCharacterTextSplitter(
-        # separator='\n\n',  # split by two line breaks
+        separators=["\n\n", "\n", " ", ""],
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
     )
@@ -80,6 +81,7 @@ def _get_retriever(db, k=settings.RET_VECTOR_K):
     return vector_ret
 
 
+@mlflow.trace(name="Custom_Retriever_Process")
 def search_similar_documents(
     query,
     k=settings.RET_VECTOR_K,
