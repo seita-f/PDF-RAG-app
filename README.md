@@ -34,7 +34,7 @@ docker compose up
 ```
 Evaluate RAG
 ```
-# suppose container is up
+# supposed container is up
 docker compose exec app bash
 
 # retrieval evaluation
